@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Setting</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-segment [(ngModel)]="displayMode">
+    <ion-segment-button value="notifyOthers" (ionSelect)="showNotifyOther()">
+      I Notify Who?
+    </ion-segment-button>
+    <ion-segment-button value="notifyMe" (ionSelect)="showNotifyMe()">
+      Who Notify Me?
+    </ion-segment-button>
+  </ion-segment>
+  <div [ngSwitch]="displayMode">
+    <ion-list inset *ngSwitchCase="'notifyOthers'">
+      <!--show this if there are no items in the list-->
+      <ion-item [hidden]="c_items.length > 0">
+        <p>
+          <strong>You added nobody to find you</strong>
+        </p>
+      </ion-item>
+
+      <ion-item>
+        <ion-buttons end>
+          <button ion-button block color="primary" (click)="addRecipient()">Add</button>
+        </ion-buttons>
+      </ion-item>
+      <ion-item *ngFor="let item of c_items">
+        <p>
+          <strong>{{item.displayName}}:</strong> {{item.mobileNo}}</p>
+            <button ion-button color="danger" (click)="removeRecipient(item)"  item-end>
+              <ion-icon name="trash"></ion-icon>&nbsp;&nbsp;&nbsp;Delete&nbsp;&nbsp;&nbsp;
+            </button>
+      </ion-item>
+    </ion-list>
+
+    <ion-list inset *ngSwitchCase="'notifyMe'">
+      <!--show this if there are no items in the list-->
+      <ion-item [hidden]="f_items.length > 0">
+        <p>
+          <strong>Nobody will notify you</strong>
+        </p>
+      </ion-item>
+      <ion-item *ngFor="let item of f_items">
+        <p>
+          <strong>{{item.displayName}}:</strong> {{item.mobileNo}}</p>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

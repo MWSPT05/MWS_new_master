@@ -1,0 +1,19 @@
+page-home {
+    .btn {
+        display:block;
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
+        border: 1px solid #30d05f;
+        text-align: center;        
+        display: inline-block;
+        text-transform: none;
+    }
+
+    .vertical-align-content > * {
+        display: flex!important;
+        text-align: center;
+        align-content: center!important;
+        align-items: center!important;
+    }
+}
