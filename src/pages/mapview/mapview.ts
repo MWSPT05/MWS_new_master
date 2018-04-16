@@ -1,9 +1,10 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
+//import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
+import { IonicPage, NavController, Platform } from 'ionic-angular';
 import { AngularFireDatabase } from 'angularfire2/database';
 
 import { Geolocation } from '@ionic-native/geolocation';
-import { Device } from '@ionic-native/device';
+//import { Device } from '@ionic-native/device';
 import * as firebase from 'firebase';
 
 import { FindMeFirebaseProvider } from '../../providers/find-me-firebase/find-me-firebase';
@@ -16,10 +17,13 @@ import { Profile } from '../../model/profile';
  * Ionic pages and navigation.
  */
 
- //declare Google variable before `@Component`.
+  //declare Google variable before `@Component`.
 declare var google: any;
 
-@IonicPage()
+@IonicPage({
+  name: 'map-view'
+})
+
 @Component({
   selector: 'page-mapview',
   templateUrl: 'mapview.html',
@@ -40,18 +44,16 @@ export class MapviewPage {
   directionsService = new google.maps.DirectionsService;
   directionsDisplay = new google.maps.DirectionsRenderer;
 
-  constructor(private platform: Platform, public navCtrl: NavController, private geolocation: Geolocation, public global: FindMeFirebaseProvider){
+  constructor(private platform: Platform, public navCtrl: NavController, private geolocation: Geolocation, public global: FindMeFirebaseProvider) {
   }
-    //platform.ready().then(() => {
-    
+
   ionViewDidLoad(){
     this.platform.ready().then(() =>{
     //console.log(this.mapRef);
       this.showMap();
     });
   };
-    //});
-  
+
   showMap(){
     
     this.geolocation.getCurrentPosition().then(pos => {
@@ -102,5 +104,4 @@ export class MapviewPage {
       map
     });
   } //addMarker()
-
 }
