@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Platform, NavController, NavParams } from 'ionic-angular';
 
 import { FindMeFirebaseProvider } from '../../providers/find-me-firebase/find-me-firebase';
-//import { MapviewPage } from '../mapview/mapview';
+import { MapviewPage } from '../mapview/mapview';
 
 @Component({
   selector: 'page-home',
@@ -58,7 +58,8 @@ export class HomePage {
   }
 
   bringMeHome() {
-    this.navCtrl.push('map-locator', { condition: "Bring Me Home" });
+    //this.navCtrl.push('map-locator', { condition: "Bring Me Home" });
+    this.navCtrl.push(MapviewPage, { condition: "Bring Me Home" });
   }
 
   notifications()
