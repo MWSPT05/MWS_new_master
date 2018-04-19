@@ -25,6 +25,8 @@ import { HttpClientModule } from '@angular/common/http';
 // Kim Chwee
 import { MapviewPage } from '../pages/mapview/mapview';
 import { Device } from '@ionic-native/device';
+//import { WatchMeRtnProvider } from '../providers/watch-me-rtn/watch-me-rtn';
+import { CallNumber } from '@ionic-native/call-number';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,9 @@ import { Device } from '@ionic-native/device';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     FindMeFirebaseProvider,
     UniqueDeviceID,
-    Device
+    Device,
+    //WatchMeRtnProvider,
+    CallNumber
   ]
 })
 export class AppModule {}
