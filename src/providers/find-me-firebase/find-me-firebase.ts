@@ -22,6 +22,10 @@ export class FindMeFirebaseProvider {
           this.updataPersonalData();
           callback(this.data, caller);
         }
+        localStorage.setItem('fbase_displayName', this.data.displayName);
+        localStorage.setItem('fbase_mobileNo', this.data.mobileNo);
+        localStorage.setItem('fbase_homeLati', this.data.homeLatitude);
+        localStorage.setItem('fbase_homeLong', this.data.homeLongitude);
       });
     }
   }

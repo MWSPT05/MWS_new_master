@@ -37,7 +37,8 @@ export class MapviewPage {
   @ViewChild('map') mapRef: ElementRef;
   map: any;
   myLocation: any;
-  //start = '1.305245, 103.793341'
+  marker: any;
+    //start = '1.305245, 103.793341'
   end = '1.305245, 103.793341'  //this will be replaced by Elderly Home address
   //end = 'Kent Ridge Guild House'
   //end = 'Fitzrovia'
@@ -51,6 +52,7 @@ export class MapviewPage {
     this.platform.ready().then(() =>{
     //console.log(this.mapRef);
       this.showMap();
+      this.watchme();
     });
   };
 
@@ -60,6 +62,12 @@ export class MapviewPage {
       // debug
       console.log('lat: ' + pos.coords.latitude + ', lon: ' + pos.coords.longitude);
       let location = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+      let curPosImage = "assets/imgs/person1.png";
+      this.marker = new google.maps.Marker({
+        map: this.map,
+        position: location,
+        icon: curPosImage
+      });
       //const location = new google.maps.LatLng(51.507351, -0.127758);
       const options = {
         center: location,
@@ -81,6 +89,7 @@ export class MapviewPage {
   } // showmap()
 
   calculateAndDisplayRoute(start) {
+    this.end = localStorage.getItem('fbase_homeLati') + ', ' + localStorage.getItem('fbase_homeLong');
     this.directionsService.route({
       origin: start,
       //origin: location,
@@ -97,11 +106,51 @@ export class MapviewPage {
     });
   } //calculateAndDisplayRoute()
   
-  addMarker(title, position, map){
-    return new google.maps.Marker({
-      title,
-      position,
-      map
+  //addMarker(title, position, map){
+  //  return new google.maps.Marker({
+  //    title,
+  //    position,
+  //    map
+  //  });
+  //} //addMarker()
+
+  watchme() {
+    let watch = this.geolocation.watchPosition();
+    let moveImage = "assets/imgs/person1.png";
+    watch.subscribe((data) => {
+      this.marker.setMap(null);
+      let updLocation = new google.maps.LatLng(data.coords.latitude.toFixed(4), 
+                                               data.coords.longitude.toFixed(4));
+      
+      //var strCoord = this.addtlInfo (data.coords.latitude.toFixed(4), 
+      //                               data.coords.longitude.toFixed(4));
+      //var strLati = parseFloat(data.coords.latitude + ' ');
+      //var strLong = parseFloat(data.coords.longitude + ' ');
+      //var strCoord = 'Name = <b>' + this.myName + '</b> <br/>' + 
+      //               'Tel/HP = ' + this.myTelnbr + '<br/>'     +
+      //               '(click on icon to call HP) <br/>' + 
+      //               'Lat = ' + strLati + ', Long = ' + strLong;
+
+      this.moveMarker(updLocation, moveImage);
     });
-  } //addMarker()
+  }
+
+  moveMarker(newLocation, moveImage) {
+    this.marker = new google.maps.Marker({
+      map: this.map,
+      //title: strCoord,      
+      position: newLocation,
+      icon: moveImage
+    });
+    let content = 'My current position';         
+    this.addInfoWindow(this.marker, content);  
+  }
+
+  addInfoWindow(marker, content){
+    let infoWindow = new google.maps.InfoWindow({
+     content: content
+   });
+ 
+   infoWindow.open(this.map, marker);
+  }
 }

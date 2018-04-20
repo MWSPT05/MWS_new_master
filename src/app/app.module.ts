@@ -26,12 +26,16 @@ import { HttpClientModule } from '@angular/common/http';
 import { MapviewPage } from '../pages/mapview/mapview';
 import { Device } from '@ionic-native/device';
 
+// Eric
+import { HomeLocationPage } from '../pages/home-location/home-location';
+
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     SigninPage,
-    MapviewPage
+    MapviewPage,
+    HomeLocationPage
   ],
   imports: [
     BrowserModule,
@@ -46,7 +50,8 @@ import { Device } from '@ionic-native/device';
     MyApp,
     HomePage,
     SigninPage,
-    MapviewPage
+    MapviewPage,
+    HomeLocationPage
   ],
   providers: [
     StatusBar,

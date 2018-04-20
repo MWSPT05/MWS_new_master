@@ -5,6 +5,8 @@ import { FindMeFirebaseProvider } from '../../providers/find-me-firebase/find-me
 import { UniqueDeviceID  } from '@ionic-native/unique-device-id';
 import { Geolocation } from '@ionic-native/geolocation';
 
+import { HomeLocationPage } from '../home-location/home-location';
+
 @IonicPage({
   name: 'sign-in'
 })
@@ -65,19 +67,24 @@ export class SigninPage {
     this.navCtrl.setRoot(HomePage);
   }
 
-  setCurrentLocation()
-  {
-    this.loader = this.loadingCtrl.create({
-      content: "Retrieving current location..."
-    });
-    //Show the loading indicator
-    this.loader.present();
+  //setCurrentLocation()
+  //{
+  //  this.loader = this.loadingCtrl.create({
+  //    content: "Retrieving current location..."
+  //  });
+  //  //Show the loading indicator
+  //  this.loader.present();
+  //
+  //  this.geolocation.getCurrentPosition().then(pos => {
+  //    this.prov.data.homeLatitude = pos.coords.latitude.toFixed(6);
+  //    this.prov.data.homeLongitude = pos.coords.longitude.toFixed(6);
+  //  });
+  //
+  //  if (this.loader !== null) this.loader.dismiss();
+  //}
 
-    this.geolocation.getCurrentPosition().then(pos => {
-      this.prov.data.homeLatitude = pos.coords.latitude.toFixed(6);
-      this.prov.data.homeLongitude = pos.coords.longitude.toFixed(6);
-    });
-
-    if (this.loader !== null) this.loader.dismiss();
+  setCurrentLocation() {
+    console.log('setCurrentLocation');
+    this.navCtrl.push(HomeLocationPage);
   }
 }
