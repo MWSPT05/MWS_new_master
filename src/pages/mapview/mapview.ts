@@ -41,11 +41,16 @@ export class MapviewPage {
   map: any;
   myLocation: any;
   marker: any;
+<<<<<<< HEAD
   private myName: string;     //localStorage.getItem('fbase_displayName');
   private myTelnbr: string;   //localStorage.getItem('fbase_mobileNo');
 
   //start = '1.305245, 103.793341'
   //end = '1.305245, 103.793341'  //this will be replaced by Elderly Home address
+=======
+    //start = '1.305245, 103.793341'
+  end = '1.305245, 103.793341'  //this will be replaced by Elderly Home address
+>>>>>>> c6a9b5fea55890c8187052c182bb1635858def03
   //end = 'Kent Ridge Guild House'
   //end = 'Fitzrovia'
   end = localStorage.getItem('fbase_homeLatitude') + ', ' + localStorage.getItem('fbase_homeLongitude');
@@ -62,8 +67,12 @@ export class MapviewPage {
     this.platform.ready().then(() =>{
     //console.log(this.mapRef);
       this.showMap();
+<<<<<<< HEAD
       this.findMe();
       this.watchMe();
+=======
+      this.watchme();
+>>>>>>> c6a9b5fea55890c8187052c182bb1635858def03
     });
   };
 
@@ -74,6 +83,12 @@ export class MapviewPage {
       console.log('lat: ' + pos.coords.latitude + ', lon: ' + pos.coords.longitude);
              
       let location = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+      let curPosImage = "assets/imgs/person1.png";
+      this.marker = new google.maps.Marker({
+        map: this.map,
+        position: location,
+        icon: curPosImage
+      });
       //const location = new google.maps.LatLng(51.507351, -0.127758);
       const options = {
         center: location,
@@ -95,6 +110,7 @@ export class MapviewPage {
   } // showmap()
 
   calculateAndDisplayRoute(start) {
+    this.end = localStorage.getItem('fbase_homeLati') + ', ' + localStorage.getItem('fbase_homeLong');
     this.directionsService.route({
       origin: start,
       //origin: location,
@@ -112,12 +128,43 @@ export class MapviewPage {
     console.log('end = ' + this.end);
   } //calculateAndDisplayRoute()
   
-  addMarker(title, position, map){
-    return new google.maps.Marker({
-      title,
-      position,
-      map
+  //addMarker(title, position, map){
+  //  return new google.maps.Marker({
+  //    title,
+  //    position,
+  //    map
+  //  });
+  //} //addMarker()
+
+  watchme() {
+    let watch = this.geolocation.watchPosition();
+    let moveImage = "assets/imgs/person1.png";
+    watch.subscribe((data) => {
+      this.marker.setMap(null);
+      let updLocation = new google.maps.LatLng(data.coords.latitude.toFixed(4), 
+                                               data.coords.longitude.toFixed(4));
+      
+      //var strCoord = this.addtlInfo (data.coords.latitude.toFixed(4), 
+      //                               data.coords.longitude.toFixed(4));
+      //var strLati = parseFloat(data.coords.latitude + ' ');
+      //var strLong = parseFloat(data.coords.longitude + ' ');
+      //var strCoord = 'Name = <b>' + this.myName + '</b> <br/>' + 
+      //               'Tel/HP = ' + this.myTelnbr + '<br/>'     +
+      //               '(click on icon to call HP) <br/>' + 
+      //               'Lat = ' + strLati + ', Long = ' + strLong;
+
+      this.moveMarker(updLocation, moveImage);
     });
+  }
+
+  moveMarker(newLocation, moveImage) {
+    this.marker = new google.maps.Marker({
+      map: this.map,
+      //title: strCoord,      
+      position: newLocation,
+      icon: moveImage
+    });
+<<<<<<< HEAD
   } //addMarker()
 
   findMe(){
@@ -204,5 +251,17 @@ export class MapviewPage {
            'Tel/HP = ' + this.myTelnbr + '<br/>'     +
            '<i>(click on icon/marker to call) </i> <br/>' + 
            'Lat = ' + strLati + ', Long = ' + strLong;
+=======
+    let content = 'My current position';         
+    this.addInfoWindow(this.marker, content);  
+  }
+
+  addInfoWindow(marker, content){
+    let infoWindow = new google.maps.InfoWindow({
+     content: content
+   });
+ 
+   infoWindow.open(this.map, marker);
+>>>>>>> c6a9b5fea55890c8187052c182bb1635858def03
   }
 }

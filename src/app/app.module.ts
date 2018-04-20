@@ -28,12 +28,16 @@ import { Device } from '@ionic-native/device';
 //import { WatchMeRtnProvider } from '../providers/watch-me-rtn/watch-me-rtn';
 import { CallNumber } from '@ionic-native/call-number';
 
+// Eric
+import { HomeLocationPage } from '../pages/home-location/home-location';
+
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     SigninPage,
-    MapviewPage
+    MapviewPage,
+    HomeLocationPage
   ],
   imports: [
     BrowserModule,
@@ -48,7 +52,8 @@ import { CallNumber } from '@ionic-native/call-number';
     MyApp,
     HomePage,
     SigninPage,
-    MapviewPage
+    MapviewPage,
+    HomeLocationPage
   ],
   providers: [
     StatusBar,
