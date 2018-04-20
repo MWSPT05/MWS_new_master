@@ -126,11 +126,14 @@ export class HomeLocationPage {
 
     this.geocoder.geocode({'placeId': item.place_id}, (results, status) => {
       if(status === 'OK' && results[0]){
-        localStorage.setItem('fbase_homeLati', results[0].geometry.location.lat());
-        localStorage.setItem('fbase_homeLong', results[0].geometry.location.lng());
+        localStorage.setItem('fbase_homeLati', results[0].geometry.location.lat().toFixed(6));
+        localStorage.setItem('fbase_homeLong', results[0].geometry.location.lng().toFixed(6));
 
         this.prov.data.homeLatitude = localStorage.getItem('fbase_homeLati');
         this.prov.data.homeLongitude = localStorage.getItem('fbase_homeLong');
+
+        console.log('fb_lati = ', localStorage.getItem('fbase_homeLati'));
+        console.log('fb_lang = ', localStorage.getItem('fbase_homeLong'));
 
         let marker = new google.maps.Marker({
           position: results[0].geometry.location,
