@@ -67,7 +67,16 @@ export class SigninPage {
     //console.log(this.prevData);
     this.prov.updatePersonalData();
     this.prov.updateMobileNo(this.prevData.mobileNo);
-    this.navCtrl.setRoot(HomePage);
+
+    if(this.prov.data.homeLatitude == '' || this.prov.data.homeLongitude == '') {
+      this.navCtrl.push(HomeLocationPage);
+      //this.navCtrl.push(HomePage);
+      //this.navCtrl.setRoot(HomePage);
+    }
+    else {
+      //this.navCtrl.push(HomePage);
+      this.navCtrl.setRoot(HomePage);
+    }
   }
 
   //setCurrentLocation()

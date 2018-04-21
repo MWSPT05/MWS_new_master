@@ -5,7 +5,8 @@
 </ion-header>
 
 <ion-content padding>
-  <form (ngSubmit)="signIn()">
+  <!-- form (ngSubmit)="signIn()" -->
+  <form>
     <ion-list>
       <ion-row>
         <ion-col>
@@ -23,44 +24,48 @@
           </ion-item>
         </ion-col>
       </ion-row>
+    </ion-list>
+  <!-- /form -->
+
+  <!--
+    <ion-grid>
       <ion-row>
+        <ion-col>&nbsp;</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col style="vertical-align: bottom">
+          <h6>Home Location</h6>
+        </ion-col>
         <ion-col>
-          <ion-item>
-            <button ion-button full round color="secondary" type="submit" [disabled]="prov.data.displayName === '' || prov.data.mobileNo === '' || !profileLoaded">Enter</button>
-          </ion-item>
+          <button ion-button round icon-end style="text-transform: none; width: 200px; height: 30px"
+            (click)="setCurrentLocation()" item-end>
+              <ion-icon name="home"></ion-icon>
+              &nbsp;&nbsp;Set Home Location&nbsp;&nbsp;
+          </button>
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col></ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-input type="tel" [(ngModel)]="prov.data.homeLatitude" name="homeLatitude" placeholder="Latitude"></ion-input>
+            <ion-input type="tel" [(ngModel)]="prov.data.homeLongitude" name="homeLongitude" placeholder="Longitute"></ion-input>
+          </ion-item>
+        </ion-col>
       </ion-row>
-    </ion-list>
-  </form>
+      <ion-row><ion-item> {{ prov.data.homeName }} </ion-item></ion-row>
+      <ion-row><ion-item> {{ prov.data.homeAddr }} </ion-item></ion-row>
+  -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <button ion-button full round color="secondary" type="submit" [disabled]="prov.data.displayName === '' || prov.data.mobileNo === '' || !profileLoaded"
+              (click)="signIn()" item-end>Enter
+            </button>
+          </ion-item>
+        </ion-col>
+      </ion-row>   
+    <!-- /ion-grid -->
 
-  <ion-grid>
-    <ion-row>
-      <ion-col>&nbsp;</ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col style="vertical-align: bottom">
-        <h6>Home Location</h6>
-      </ion-col>
-      <ion-col>
-        <button ion-button round icon-end style="text-transform: none; width: 200px; height: 30px"
-          (click)="setCurrentLocation()" item-end>
-            <ion-icon name="home"></ion-icon>
-            &nbsp;&nbsp;Set Home Location&nbsp;&nbsp;
-        </button>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-input type="tel" [(ngModel)]="prov.data.homeLatitude" name="homeLatitude" placeholder="Latitude"></ion-input>
-          <ion-input type="tel" [(ngModel)]="prov.data.homeLongitude" name="homeLongitude" placeholder="Longitute"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row><ion-item> {{ prov.data.homeName }} </ion-item></ion-row>
-    <ion-row><ion-item> {{ prov.data.homeAddr }} </ion-item></ion-row>
-  </ion-grid>
+
+  </form>
 </ion-content>
