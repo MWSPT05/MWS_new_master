@@ -22,6 +22,9 @@ export class SigninPage {
   profileLoaded = false;
   deviceId: string = "TESTDEVICEID";
   prevData = { displayName: "", mobileNo: "", condition: "" };
+  
+  locationName: string;
+  locationAddr: string;
 
   constructor(
     public navCtrl: NavController, 
@@ -86,5 +89,7 @@ export class SigninPage {
   setCurrentLocation() {
     console.log('setCurrentLocation');
     this.navCtrl.push(HomeLocationPage);
+    //this.locationName = localStorage.getItem('locName');
+    //this.locationAddr = localStorage.getItem('locAddr');
   }
 }

@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 //import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
-import { IonicPage, NavController, Platform } from 'ionic-angular';
+import { IonicPage, NavController, Platform, Navbar } from 'ionic-angular';
 import { AngularFireDatabase } from 'angularfire2/database';
 
 import { Geolocation } from '@ionic-native/geolocation';
@@ -35,9 +35,18 @@ export class MapviewPage {
   }
 
   @ViewChild('map') mapRef: ElementRef;
+  @ViewChild('navbar') navBar: Navbar;
+
   map: any;
   myLocation: any;
   marker: any;
+  watchId: any;
+
+  geoLocationOptions = {
+    maximumAge: 3000,
+    enableHighAccuracy: true
+  }; 
+
     //start = '1.305245, 103.793341'
   end = '1.305245, 103.793341'  //this will be replaced by Elderly Home address
   //end = 'Kent Ridge Guild House'
@@ -45,20 +54,31 @@ export class MapviewPage {
   directionsService = new google.maps.DirectionsService;
   directionsDisplay = new google.maps.DirectionsRenderer;
 
-  constructor(private platform: Platform, public navCtrl: NavController, private geolocation: Geolocation, public global: FindMeFirebaseProvider) {
+  constructor(
+    private platform: Platform, 
+    public navCtrl: NavController, 
+    private geolocation: Geolocation, 
+    public global: FindMeFirebaseProvider
+  ) {
+    this.platform.registerBackButtonAction(() => this.backButtonClick)
   }
 
+  backButtonClick() {
+    navigator.geolocation.clearWatch(this.watchId);
+  }
+  
   ionViewDidLoad(){
     this.platform.ready().then(() =>{
     //console.log(this.mapRef);
       this.showMap();
       this.watchme();
     });
+    //this.navBar.backButtonClick = this.backButtonClick;
   };
 
   showMap(){
     
-    this.geolocation.getCurrentPosition().then(pos => {
+    this.geolocation.getCurrentPosition(this.geoLocationOptions).then(pos => {
       // debug
       console.log('lat: ' + pos.coords.latitude + ', lon: ' + pos.coords.longitude);
       let location = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
@@ -115,12 +135,12 @@ export class MapviewPage {
   //} //addMarker()
 
   watchme() {
-    let watch = this.geolocation.watchPosition();
+    var watchId = this.geolocation.watchPosition(this.geoLocationOptions);
     let moveImage = "assets/imgs/person1.png";
-    watch.subscribe((data) => {
+    watchId.subscribe((data) => {
       this.marker.setMap(null);
-      let updLocation = new google.maps.LatLng(data.coords.latitude.toFixed(4), 
-                                               data.coords.longitude.toFixed(4));
+      let updLocation = new google.maps.LatLng(data.coords.latitude, 
+                                               data.coords.longitude);
       
       //var strCoord = this.addtlInfo (data.coords.latitude.toFixed(4), 
       //                               data.coords.longitude.toFixed(4));

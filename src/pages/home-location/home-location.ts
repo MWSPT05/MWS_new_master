@@ -131,9 +131,13 @@ export class HomeLocationPage {
 
         this.prov.data.homeLatitude = localStorage.getItem('fbase_homeLati');
         this.prov.data.homeLongitude = localStorage.getItem('fbase_homeLong');
+        this.prov.data.homeName = item.description;
+        this.prov.data.homeAddr = results[0].formatted_address;
 
         console.log('fb_lati = ', localStorage.getItem('fbase_homeLati'));
         console.log('fb_lang = ', localStorage.getItem('fbase_homeLong'));
+
+        console.log('short name = ', results[0].address_components);
 
         let marker = new google.maps.Marker({
           position: results[0].geometry.location,
@@ -151,6 +155,9 @@ export class HomeLocationPage {
         this.map.setCenter(results[0].geometry.location);
 
         infowindow.open(this.map, marker);
+
+        localStorage.setItem('locName', item.description);
+        localStorage.setItem('locAddr', results[0].formatted_address);
       }
     });
   }

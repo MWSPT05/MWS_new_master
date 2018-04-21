@@ -13,7 +13,7 @@
 <ion-content text-center class="vertical-align-content">
   <div style="text-align: center; display: block; width:100%">
     
-      <button text-center class="btn" ion-button color="secondary" round outline (press)="findMe()"
+      <button text-center class="btn" ion-button color="secondary" round outline (click)="findMe()"
       [ngStyle]="{'background-color': buttonColor, 'height': deviceWidth, 'width': deviceWidth}" large
       (window:resize)="onResize($event)">{{findMeText}}</button>
   </div>
