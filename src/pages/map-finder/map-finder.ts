@@ -7,20 +7,19 @@ import { GeoProvider } from '../../providers/geo/geo';
 declare var google: any;
 
 @IonicPage({
-  name: 'map-locator'
+  name: 'map-finder'
 })
-
 @Component({
-  selector: 'page-map-locator',
-  templateUrl: 'map-locator.html',
+  selector: 'page-map-finder',
+  templateUrl: 'map-finder.html',
 })
-export class MapLocatorPage {
+export class MapFinderPage {
+  title = "Find Who?";
 
   @ViewChild('map') mapRef: ElementRef;
   map: any;
   directionsService = new google.maps.DirectionsService;
   directionsDisplay = new google.maps.DirectionsRenderer;
-  end: any;
 
   constructor(
     public navCtrl: NavController,
@@ -28,46 +27,55 @@ export class MapLocatorPage {
     public prov: FindMeFirebaseProvider,
     private platform: Platform,
     public geo: GeoProvider
-  ) { }
+  ) {
+    console.log(this.navParams.get('displayName'));
+    this.title = 'Finding ' + this.navParams.get('displayName') + '...';
+  }
 
   ionViewDidLoad() {
+    let self = this;
     this.platform.ready().then(() => {
       this.initializeMap();
       this.geo.stopTracking();
-      this.geo.startTracking(this.bringMeHome, this);
-      //this.bringMeHome(this);
-      //this.geo.getCurrentLocation(true, this.bringMeHome, this);
+      this.geo.startTracking(this.loadCurrentLocationSuccess, this);
     });
   };
 
-  initializeMap()
-  {
+  initializeMap() {
     let start = new google.maps.LatLng(this.prov.currentLoc.latitude, this.prov.currentLoc.longitude);
-    this.end = new google.maps.LatLng(parseFloat(this.prov.data.homeLatitude), parseFloat(this.prov.data.homeLongitude));
     const options = { center: start, zoom: 15 }
     this.map = new google.maps.Map(this.mapRef.nativeElement, options);
   }
 
-  bringMeHome(self) {
-    console.log(self.prov.currentLoc);
-    let start = new google.maps.LatLng(self.prov.currentLoc.latitude, self.prov.currentLoc.longitude);
+  loadCurrentLocationSuccess(self) {
+    let deviceId = self.navParams.get('finderId');
+    let _self = self;
+    self.prov.db.ref('findMe/location/' + deviceId).on('value', resp => {
+      let loc = resp.val();
+      _self.showDirection(self, resp.val());
+    });
+  }
 
-    self.directionsService.route({
+  showDirection(_self, loc) {
+    let start = new google.maps.LatLng(parseFloat(_self.prov.currentLoc.latitude), parseFloat(_self.prov.currentLoc.longitude));
+    let end = new google.maps.LatLng(parseFloat(loc.latitude), parseFloat(loc.longitude));
+    
+    _self.directionsService.route({
       origin: start,
-      destination: self.end,
+      destination: end,
       //travelMode: 'DRIVING'
       travelMode: 'TRANSIT'   //public transport
     }, (response, status) => {
       if (status === 'OK') {
-        self.directionsDisplay.setDirections(response);
-        self.directionsDisplay.setMap(self.map);
+        _self.directionsDisplay.setDirections(response);
+        _self.directionsDisplay.setMap(_self.map);
       } else {
         window.alert('Directions request failed due to ' + status);
       }
     });
 
-    //self.addMarker('Me', start, self.map);
-    //self.addMarker('Home', end, self.map);
+    //_self.addMarker('Me', start, self.map);
+    //_self.addMarker(_self.navParams.get('displayName'), end, _self.map);
   }
 
   addMarker(title, position, map) {

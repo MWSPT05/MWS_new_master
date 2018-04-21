@@ -6,56 +6,59 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
-
-//*******************
-// used by this app *
-//*******************
-// -> Paul and Mylyn
 import { SigninPage } from '../pages/signin/signin';
 import { FindMeFirebaseProvider } from '../providers/find-me-firebase/find-me-firebase';
+
 import { UniqueDeviceID  } from '@ionic-native/unique-device-id';
 import { Geolocation } from '@ionic-native/geolocation';
-
-import { AngularFireModule } from 'angularfire2';
-import { FIREBASE_CONFIG } from './firebase.credentials';
-import { AngularFireDatabaseModule } from 'angularfire2/database';
-import { AngularFireStorageModule } from 'angularfire2/storage';
+import { FcmProvider } from '../providers/fcm/fcm';
 import { HttpClientModule } from '@angular/common/http';
 
-// Kim Chwee
-import { MapviewPage } from '../pages/mapview/mapview';
-import { Device } from '@ionic-native/device';
+import { Firebase } from '@ionic-native/firebase';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { GeoProvider } from '../providers/geo/geo';
+import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
+
+const firebase = {
+  apiKey: "AIzaSyB-Y3aJhcFbEuMnaeO5pnr2F5i0FpN6owM",
+  authDomain: "masterclass-7fdb8.firebaseapp.com",
+  databaseURL: "https://masterclass-7fdb8.firebaseio.com",
+  projectId: "masterclass-7fdb8",
+  storageBucket: "masterclass-7fdb8.appspot.com",
+  messagingSenderId: "271473028429"
+ }
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
-    SigninPage,
-    MapviewPage
+    SigninPage
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     IonicModule.forRoot(MyApp),
-    AngularFireModule.initializeApp(FIREBASE_CONFIG),
-    AngularFireDatabaseModule,
-    AngularFireStorageModule,
-    HttpClientModule    
+    AngularFireModule.initializeApp(firebase), 
+    AngularFirestoreModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     HomePage,
-    SigninPage,
-    MapviewPage
+    SigninPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     FindMeFirebaseProvider,
     UniqueDeviceID,
-    Device
+    BackgroundGeolocation,
+    Geolocation,
+    Firebase,
+    FcmProvider,
+    GeoProvider
   ]
 })
 export class AppModule {}
