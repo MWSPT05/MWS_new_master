@@ -30,7 +30,7 @@ export class FindMeFirebaseProvider {
           callback(resp.val(), caller);
         }
         else {
-          this.updataPersonalData();
+          this.updatePersonalData();
           callback(this.data, caller);
         }
         localStorage.setItem('fbase_displayName', this.data.displayName);
@@ -41,7 +41,7 @@ export class FindMeFirebaseProvider {
     }
   }
 
-  updataPersonalData() {
+  updatePersonalData() {
     firebase.database().ref('findMe/profile').child(this.deviceId).set(this.data);
   }
 

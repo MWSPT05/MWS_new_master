@@ -45,9 +45,9 @@ export class HomePage {
     // this.buttonColor = (this.buttonColor == '#345465'? "#FFF" : "345465"); //desired Color
     //this.findMeText = (this.findMeText == "Find Me" ? "Finding You..." : "Find Me");
     console.log('in findMe() module');
-    this.buttonColor = "#345465"; //desired Color
-    this.navCtrl.push(FindMePage);
+    //this.navCtrl.push(FindMePage);
 
+    this.buttonColor = "#345465"; //desired Color
     if (this.findMeText == "Finding You...") {
       this.findMeText = "Find Me";
       this.buttonColor = "#FFF";

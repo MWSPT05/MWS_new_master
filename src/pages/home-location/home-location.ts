@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Geolocation } from '@ionic-native/geolocation';
 
 import { FindMeFirebaseProvider } from '../../providers/find-me-firebase/find-me-firebase';
+import { HomePage } from '../home/home';
 
 /**
  * Generated class for the HomeLocationPage page.
@@ -55,6 +56,12 @@ export class HomeLocationPage {
     this.geocoder = new google.maps.Geocoder;
     let elem = document.createElement("div")
     this.GooglePlaces = new google.maps.places.PlacesService(elem);    
+  }
+
+  ionViewWillLeave() {
+    if (this.prov.data.homeLatitude != '' && this.prov.data.homeLongitude != '') {
+      this.navCtrl.setRoot(HomePage);
+    }
   }
 
   ionViewDidLoad() {

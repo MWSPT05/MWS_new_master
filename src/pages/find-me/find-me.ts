@@ -107,7 +107,7 @@ export class FindMePage {
 
       this.prov.data.move2Lati = position.coords.latitude + '';
       this.prov.data.move2Long = position.coords.longitude + '';
-      this.prov.updataPersonalData();
+      this.prov.updatePersonalData();
 
     });
   }
@@ -133,7 +133,7 @@ export class FindMePage {
 
       this.prov.data.move2Lati = pos.coords.latitude + '';
       this.prov.data.move2Long = pos.coords.longitude + '';
-      this.prov.updataPersonalData();
+      this.prov.updatePersonalData();
 
       console.log('new loc = ', this.prov.data.move2Lati + ', ' + this.prov.data.move2Long);
     });
