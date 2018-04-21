@@ -43,13 +43,6 @@ export class MapviewPage {
   map: any;
   myLocation: any;
   marker: any;
-
-  private myName: string;     //localStorage.getItem('fbase_displayName');
-  private myTelnbr: string;   //localStorage.getItem('fbase_mobileNo');
-
-  //start = '1.305245, 103.793341'
-  //end = '1.305245, 103.793341'  //this will be replaced by Elderly Home address
-
   watchId: any;
 
   geoLocationOptions = {
@@ -136,22 +129,9 @@ export class MapviewPage {
     });
     console.log('end = ' + this.end);
   } //calculateAndDisplayRoute()
-  
-  //addMarker(title, position, map){
-  //  return new google.maps.Marker({
-  //    title,
-  //    position,
-  //    map
-  //  });
-  //} //addMarker()
 
   findMe(){
-    let geoLocationOptions = {
-      maximumAge: 3000,
-      enableHighAccuracy: true
-    } 
-
-    this.geolocation.getCurrentPosition(geoLocationOptions).then((position) => {
+    this.geolocation.getCurrentPosition(this.geoLocationOptions).then((position) => {
       let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       
       //var strCoord = this.addtlInfo (position.coords.latitude, position.coords.longitude);    
@@ -212,21 +192,26 @@ export class MapviewPage {
   
     infoWindow.open(this.map, marker);
 
+    let myName = this.global.data.displayName;
+    let myTelnbr = this.global.data.mobileNo;
+  
     if (allowCall = 'Y') {
       google.maps.event.addListener(marker, 'click', () => {
         infoWindow.open(this.map, marker);
-        this.callNumber.callNumber(this.myTelnbr, true)
-          .then(res => console.log('Dialling = ',this.myTelnbr))
+        this.callNumber.callNumber(myTelnbr, true)
+          .then(res => console.log('Dialling = ',myTelnbr))
           .catch(err => console.log('Error launching dialer', err));
       });
     }
   }
  
   addtlInfo(infoLati, infoLong) {
+    let myName = this.global.data.displayName;
+    let myTelnbr = this.global.data.mobileNo;
     var strLati = parseFloat(infoLati + ' ');
     var strLong = parseFloat(infoLong + ' ');
-    return 'Name = <b>' + this.myName + '</b> <br/>' + 
-           'Tel/HP = ' + this.myTelnbr + '<br/>'     +
+    return 'Name = <b>' + myName + '</b> <br/>' + 
+           'Tel/HP = ' + myTelnbr + '<br/>'     +
            '<i>(click on icon/marker to call) </i> <br/>' + 
            'Lat = ' + strLati + ', Long = ' + strLong;
   }
