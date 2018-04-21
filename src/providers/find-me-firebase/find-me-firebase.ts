@@ -5,13 +5,24 @@ import { Profile } from '../../model/profile';
 @Injectable()
 export class FindMeFirebaseProvider {
   public deviceId = "";
-  public data: Profile = { displayName: "", mobileNo: "", homeLatitude: "", homeLongitude: "" };
   public notifyOther = [];
   public notifyMe = [];
 
+  public data: Profile = 
+  { 
+    displayName: "", 
+    mobileNo: "", 
+    homeLatitude: "", 
+    homeLongitude: "",
+    homeName: "",
+    homeAddr: "",
+    move2Lati: "",
+    move2Long: ""
+  };
+
   constructor() { }
 
-  register(callback, caller) {
+    register(callback, caller) {
     if (this.deviceId != "") {
       firebase.database().ref('findMe/profile').child(this.deviceId).once('value').then((resp) => {
         if (resp.exists()) {
@@ -19,14 +30,20 @@ export class FindMeFirebaseProvider {
           callback(resp.val(), caller);
         }
         else {
-          this.updataPersonalData();
+          this.updatePersonalData();
           callback(this.data, caller);
         }
+        // Store to local storage
+        localStorage.setItem('fbase_deviceId', this.deviceId);
+        localStorage.setItem('fbase_displayName', this.data.displayName);
+        localStorage.setItem('fbase_mobileNo', this.data.mobileNo);
+        localStorage.setItem('fbase_homeLatitude', this.data.homeLatitude);
+        localStorage.setItem('fbase_homeLongitude', this.data.homeLongitude);  
       });
     }
   }
 
-  updataPersonalData() {
+  updatePersonalData() {
     firebase.database().ref('findMe/profile').child(this.deviceId).set(this.data);
   }
 

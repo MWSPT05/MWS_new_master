@@ -5,6 +5,8 @@ import { FindMeFirebaseProvider } from '../../providers/find-me-firebase/find-me
 import { UniqueDeviceID  } from '@ionic-native/unique-device-id';
 import { Geolocation } from '@ionic-native/geolocation';
 
+import { HomeLocationPage } from '../home-location/home-location';
+
 @IonicPage({
   name: 'sign-in'
 })
@@ -20,6 +22,9 @@ export class SigninPage {
   profileLoaded = false;
   deviceId: string = "TESTDEVICEID";
   prevData = { displayName: "", mobileNo: "", condition: "" };
+  
+  locationName: string;
+  locationAddr: string;
 
   constructor(
     public navCtrl: NavController, 
@@ -60,24 +65,40 @@ export class SigninPage {
 
   signIn() {
     //console.log(this.prevData);
-    this.prov.updataPersonalData();
+    this.prov.updatePersonalData();
     this.prov.updateMobileNo(this.prevData.mobileNo);
-    this.navCtrl.setRoot(HomePage);
+
+    if(this.prov.data.homeLatitude == '' || this.prov.data.homeLongitude == '') {
+      this.navCtrl.push(HomeLocationPage);
+      //this.navCtrl.push(HomePage);
+      //this.navCtrl.setRoot(HomePage);
+    }
+    else {
+      //this.navCtrl.push(HomePage);
+      this.navCtrl.setRoot(HomePage);
+    }
   }
 
-  setCurrentLocation()
-  {
-    this.loader = this.loadingCtrl.create({
-      content: "Retrieving current location..."
-    });
-    //Show the loading indicator
-    this.loader.present();
+  //setCurrentLocation()
+  //{
+  //  this.loader = this.loadingCtrl.create({
+  //    content: "Retrieving current location..."
+  //  });
+  //  //Show the loading indicator
+  //  this.loader.present();
+  //
+  //  this.geolocation.getCurrentPosition().then(pos => {
+  //    this.prov.data.homeLatitude = pos.coords.latitude.toFixed(6);
+  //    this.prov.data.homeLongitude = pos.coords.longitude.toFixed(6);
+  //  });
+  //
+  //  if (this.loader !== null) this.loader.dismiss();
+  //}
 
-    this.geolocation.getCurrentPosition().then(pos => {
-      this.prov.data.homeLatitude = pos.coords.latitude.toFixed(6);
-      this.prov.data.homeLongitude = pos.coords.longitude.toFixed(6);
-    });
-
-    if (this.loader !== null) this.loader.dismiss();
+  setCurrentLocation() {
+    console.log('setCurrentLocation');
+    this.navCtrl.push(HomeLocationPage);
+    //this.locationName = localStorage.getItem('locName');
+    //this.locationAddr = localStorage.getItem('locAddr');
   }
 }

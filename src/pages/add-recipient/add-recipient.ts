@@ -12,7 +12,19 @@ import { Profile } from '../../model/profile';
 })
 export class AddRecipientPage {
 
-  recipient: Profile = {displayName: '', mobileNo: '', homeLatitude: '', homeLongitude: ''}
+  //recipient: Profile = {displayName: '', mobileNo: '', homeLatitude: '', homeLongitude: ''}
+
+  recipient: Profile = 
+  { 
+    displayName: "", 
+    mobileNo: "", 
+    homeLatitude: "", 
+    homeLongitude: "",
+    homeName: "",
+    homeAddr: "",
+    move2Lati: "",
+    move2Long: ""
+  };
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public prov: FindMeFirebaseProvider) {
   }

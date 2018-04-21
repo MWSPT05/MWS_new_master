@@ -22,16 +22,25 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireStorageModule } from 'angularfire2/storage';
 import { HttpClientModule } from '@angular/common/http';
 
+//import { FindMePage } from '../pages/find-me/find-me';
+
 // Kim Chwee
 import { MapviewPage } from '../pages/mapview/mapview';
 import { Device } from '@ionic-native/device';
+//import { WatchMeRtnProvider } from '../providers/watch-me-rtn/watch-me-rtn';
+import { CallNumber } from '@ionic-native/call-number';
+
+// Eric
+import { HomeLocationPage } from '../pages/home-location/home-location';
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     SigninPage,
-    MapviewPage
+    MapviewPage,
+    //FindMePage,
+    HomeLocationPage
   ],
   imports: [
     BrowserModule,
@@ -46,7 +55,9 @@ import { Device } from '@ionic-native/device';
     MyApp,
     HomePage,
     SigninPage,
-    MapviewPage
+    MapviewPage,
+    //FindMePage,
+    HomeLocationPage
   ],
   providers: [
     StatusBar,
@@ -55,7 +66,9 @@ import { Device } from '@ionic-native/device';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     FindMeFirebaseProvider,
     UniqueDeviceID,
-    Device
+    Device,
+    //WatchMeRtnProvider,
+    CallNumber
   ]
 })
 export class AppModule {}
