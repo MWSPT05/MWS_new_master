@@ -27,6 +27,8 @@ import { FindMePage } from '../pages/find-me/find-me';
 // Kim Chwee
 import { MapviewPage } from '../pages/mapview/mapview';
 import { Device } from '@ionic-native/device';
+//import { WatchMeRtnProvider } from '../providers/watch-me-rtn/watch-me-rtn';
+import { CallNumber } from '@ionic-native/call-number';
 
 // Eric
 import { HomeLocationPage } from '../pages/home-location/home-location';
@@ -64,7 +66,9 @@ import { HomeLocationPage } from '../pages/home-location/home-location';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     FindMeFirebaseProvider,
     UniqueDeviceID,
-    Device
+    Device,
+    //WatchMeRtnProvider,
+    CallNumber
   ]
 })
 export class AppModule {}

@@ -8,7 +8,10 @@ import { Geolocation } from '@ionic-native/geolocation';
 import * as firebase from 'firebase';
 
 import { FindMeFirebaseProvider } from '../../providers/find-me-firebase/find-me-firebase';
-import { Profile } from '../../model/profile';
+
+import { CallNumber } from '@ionic-native/call-number';
+
+//import { WatchMeRtnProvider } from '../../providers/watch-me-rtn/watch-me-rtn';
 
 /**
  * Generated class for the MapviewPage page.
@@ -40,6 +43,15 @@ export class MapviewPage {
   map: any;
   myLocation: any;
   marker: any;
+<<<<<<< HEAD
+<<<<<<< HEAD
+  private myName: string;     //localStorage.getItem('fbase_displayName');
+  private myTelnbr: string;   //localStorage.getItem('fbase_mobileNo');
+
+  //start = '1.305245, 103.793341'
+  //end = '1.305245, 103.793341'  //this will be replaced by Elderly Home address
+=======
+=======
   watchId: any;
 
   geoLocationOptions = {
@@ -47,13 +59,23 @@ export class MapviewPage {
     enableHighAccuracy: true
   }; 
 
+>>>>>>> 653be79db923ac617752dfd64435d58c84e2be13
     //start = '1.305245, 103.793341'
   end = '1.305245, 103.793341'  //this will be replaced by Elderly Home address
+>>>>>>> c6a9b5fea55890c8187052c182bb1635858def03
   //end = 'Kent Ridge Guild House'
   //end = 'Fitzrovia'
+  end = localStorage.getItem('fbase_homeLatitude') + ', ' + localStorage.getItem('fbase_homeLongitude');
   directionsService = new google.maps.DirectionsService;
   directionsDisplay = new google.maps.DirectionsRenderer;
 
+<<<<<<< HEAD
+  constructor(private platform: Platform, 
+              public navCtrl: NavController, 
+              private geolocation: Geolocation, 
+              private callNumber: CallNumber,
+              public global: FindMeFirebaseProvider) { }
+=======
   constructor(
     private platform: Platform, 
     public navCtrl: NavController, 
@@ -62,6 +84,7 @@ export class MapviewPage {
   ) {
     this.platform.registerBackButtonAction(() => this.backButtonClick)
   }
+>>>>>>> 653be79db923ac617752dfd64435d58c84e2be13
 
   backButtonClick() {
     navigator.geolocation.clearWatch(this.watchId);
@@ -71,7 +94,12 @@ export class MapviewPage {
     this.platform.ready().then(() =>{
     //console.log(this.mapRef);
       this.showMap();
+<<<<<<< HEAD
+      this.findMe();
+      this.watchMe();
+=======
       this.watchme();
+>>>>>>> c6a9b5fea55890c8187052c182bb1635858def03
     });
     //this.navBar.backButtonClick = this.backButtonClick;
   };
@@ -81,6 +109,7 @@ export class MapviewPage {
     this.geolocation.getCurrentPosition(this.geoLocationOptions).then(pos => {
       // debug
       console.log('lat: ' + pos.coords.latitude + ', lon: ' + pos.coords.longitude);
+             
       let location = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
       let curPosImage = "assets/imgs/person1.png";
       this.marker = new google.maps.Marker({
@@ -99,12 +128,12 @@ export class MapviewPage {
     });
     //const location = new google.maps.LatLng(51.507351, -0.127758);
     //const location = new google.maps.LatLng(pos.coords.latitude, -0.127758);
-/*      const options = {
+    /*      const options = {
       center: location,
       zoom: 10
     }        
     this.map = new google.maps.Map(this.mapRef.nativeElement, options);
-*/
+    */
     //this.addMarker(location, this.map);
   } // showmap()
 
@@ -124,6 +153,7 @@ export class MapviewPage {
         window.alert('Directions request failed due to ' + status);
       }
     });
+    console.log('end = ' + this.end);
   } //calculateAndDisplayRoute()
   
   //addMarker(title, position, map){
@@ -162,6 +192,94 @@ export class MapviewPage {
       position: newLocation,
       icon: moveImage
     });
+<<<<<<< HEAD
+  } //addMarker()
+
+  findMe(){
+    let geoLocationOptions = {
+      maximumAge: 3000,
+      enableHighAccuracy: true
+    } 
+
+    this.geolocation.getCurrentPosition(geoLocationOptions).then((position) => {
+      let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      
+      //var strCoord = this.addtlInfo (position.coords.latitude, position.coords.longitude);    
+      let strCoord = "My current position";
+      let curPosImage = "assets/imgs/person2.png";
+      this.putMarker(latLng, curPosImage, strCoord);
+           
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  putMarker(location, curPosImage, strCoord) {
+    this.marker = new google.maps.Marker({
+      map: this.map,
+      //title: strCoord,
+      animation: google.maps.Animation.DROP, 
+      position: location,
+      icon: curPosImage
+    });
+   
+    let content = strCoord;         
+    let allowCall = 'N';
+    this.addInfoWindow(this.marker, content, allowCall);  
+  }
+
+  watchMe() {
+    let watch = this.geolocation.watchPosition();
+    let moveImage = "assets/imgs/person2.png";
+
+    watch.subscribe((data) => {
+      //this.marker.setMap(null);
+      let updLocation = new google.maps.LatLng(data.coords.latitude, data.coords.longitude);
+      //var strCoord = this.addtlInfo (data.coords.latitude, data.coords.longitude);      
+      let strCoord = 'My current position';
+      this.moveMarker(updLocation, moveImage, strCoord);
+    });
+  }
+
+  moveMarker(newLocation, moveImage, strCoord){
+    this.marker.setMap(null);
+    this.marker = new google.maps.Marker({
+      map: this.map,
+      //title: strCoord,      
+      position: newLocation,
+      icon: moveImage
+    });
+
+    let content = strCoord;
+    let allowCall = 'N';
+    this.addInfoWindow(this.marker, content, allowCall);  
+  }
+
+  addInfoWindow(marker, content, allowCall){
+    let infoWindow = new google.maps.InfoWindow({
+      content: content
+    });
+  
+    infoWindow.open(this.map, marker);
+
+    if (allowCall = 'Y') {
+      google.maps.event.addListener(marker, 'click', () => {
+        infoWindow.open(this.map, marker);
+        this.callNumber.callNumber(this.myTelnbr, true)
+          .then(res => console.log('Dialling = ',this.myTelnbr))
+          .catch(err => console.log('Error launching dialer', err));
+      });
+    }
+  }
+ 
+  addtlInfo(infoLati, infoLong) {
+    var strLati = parseFloat(infoLati + ' ');
+    var strLong = parseFloat(infoLong + ' ');
+    return 'Name = <b>' + this.myName + '</b> <br/>' + 
+           'Tel/HP = ' + this.myTelnbr + '<br/>'     +
+           '<i>(click on icon/marker to call) </i> <br/>' + 
+           'Lat = ' + strLati + ', Long = ' + strLong;
+=======
     let content = 'My current position';         
     this.addInfoWindow(this.marker, content);  
   }
@@ -172,5 +290,6 @@ export class MapviewPage {
    });
  
    infoWindow.open(this.map, marker);
+>>>>>>> c6a9b5fea55890c8187052c182bb1635858def03
   }
 }

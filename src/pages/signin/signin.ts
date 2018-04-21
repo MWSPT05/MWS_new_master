@@ -65,7 +65,7 @@ export class SigninPage {
 
   signIn() {
     //console.log(this.prevData);
-    this.prov.updataPersonalData();
+    this.prov.updatePersonalData();
     this.prov.updateMobileNo(this.prevData.mobileNo);
     this.navCtrl.setRoot(HomePage);
   }
