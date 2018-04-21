@@ -5,9 +5,20 @@ import { Profile } from '../../model/profile';
 @Injectable()
 export class FindMeFirebaseProvider {
   public deviceId = "";
-  public data: Profile = { displayName: "", mobileNo: "", homeLatitude: "", homeLongitude: "" };
   public notifyOther = [];
   public notifyMe = [];
+
+  public data: Profile = 
+  { 
+    displayName: "", 
+    mobileNo: "", 
+    homeLatitude: "", 
+    homeLongitude: "",
+    homeName: "",
+    homeAddr: "",
+    move2Lati: "",
+    move2Long: ""
+  };
 
   constructor() { }
 

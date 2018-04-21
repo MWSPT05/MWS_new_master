@@ -45,10 +45,10 @@
         <h6>Home Location</h6>
       </ion-col>
       <ion-col>
-        <button ion-button round icon-end style="text-transform: none; width: 130px; height: 30px"
+        <button ion-button round icon-end style="text-transform: none; width: 200px; height: 30px"
           (click)="setCurrentLocation()" item-end>
             <ion-icon name="home"></ion-icon>
-            &nbsp;&nbsp;Set Current&nbsp;&nbsp;
+            &nbsp;&nbsp;Set Home Location&nbsp;&nbsp;
         </button>
       </ion-col>
     </ion-row>
@@ -60,5 +60,7 @@
         </ion-item>
       </ion-col>
     </ion-row>
+    <ion-row><ion-item> {{ prov.data.homeName }} </ion-item></ion-row>
+    <ion-row><ion-item> {{ prov.data.homeAddr }} </ion-item></ion-row>
   </ion-grid>
 </ion-content>

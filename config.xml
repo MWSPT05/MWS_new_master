@@ -1,6 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="sg.nusse4207.sosapp" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<<<<<<< HEAD
     <name>MWSPT05</name>
+=======
+    <name>Find Me!</name>
+>>>>>>> 653be79db923ac617752dfd64435d58c84e2be13
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
     <content src="index.html" />

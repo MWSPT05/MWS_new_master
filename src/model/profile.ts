@@ -4,4 +4,8 @@ export interface Profile {
     mobileNo: string;
     homeLatitude: string;
     homeLongitude: string;
+    homeName: string;
+    homeAddr: string;
+    move2Lati: string;
+    move2Long: string;
 }
