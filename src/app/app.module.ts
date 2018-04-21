@@ -22,7 +22,7 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireStorageModule } from 'angularfire2/storage';
 import { HttpClientModule } from '@angular/common/http';
 
-import { FindMePage } from '../pages/find-me/find-me';
+//import { FindMePage } from '../pages/find-me/find-me';
 
 // Kim Chwee
 import { MapviewPage } from '../pages/mapview/mapview';
@@ -39,7 +39,7 @@ import { HomeLocationPage } from '../pages/home-location/home-location';
     HomePage,
     SigninPage,
     MapviewPage,
-    FindMePage,
+    //FindMePage,
     HomeLocationPage
   ],
   imports: [
@@ -56,7 +56,7 @@ import { HomeLocationPage } from '../pages/home-location/home-location';
     HomePage,
     SigninPage,
     MapviewPage,
-    FindMePage,
+    //FindMePage,
     HomeLocationPage
   ],
   providers: [
