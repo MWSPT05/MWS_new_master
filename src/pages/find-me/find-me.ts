@@ -15,12 +15,12 @@ declare var google;
  * Ionic pages and navigation.
  */
 
-@IonicPage({
-  name: 'find-me'
-})
+//@IonicPage({
+//  name: 'find-me'
+//})
 @Component({
   selector: 'page-find-me',
-  templateUrl: 'find-me.html',
+  templateUrl: 'find-me.html'
 })
 export class FindMePage {
 
@@ -54,7 +54,7 @@ export class FindMePage {
     console.log('ionViewDidLoad FindMePage');
     this.userid = this.navParams.get('data');
 
-    this.myCurrPos();
+    //this.myCurrPos();
     //this.findMe();
     this.watchMe();
   }
@@ -116,10 +116,10 @@ export class FindMePage {
     let watchId = this.geolocation.watchPosition(this.geoLocationOptions);
     let moveImage = "assets/imgs/person1.png";
     watchId.subscribe((pos) => {
-      this.marker.setMap(null);
-      let updLocation = new google.maps.LatLng(pos.coords.latitude, 
-                                               pos.coords.longitude);
-      
+      //this.marker.setMap(null);
+      //let updLocation = new google.maps.LatLng(pos.coords.latitude, 
+      //                                         pos.coords.longitude);
+      //
       //var strCoord = this.addtlInfo (data.coords.latitude.toFixed(4), 
       //                               data.coords.longitude.toFixed(4));
       //var strLati = parseFloat(data.coords.latitude + ' ');
@@ -129,11 +129,11 @@ export class FindMePage {
       //               '(click on icon to call HP) <br/>' + 
       //               'Lat = ' + strLati + ', Long = ' + strLong;
 
-      this.moveMarker(updLocation, moveImage);
+      //this.moveMarker(updLocation, moveImage);
 
       this.prov.data.move2Lati = pos.coords.latitude + '';
       this.prov.data.move2Long = pos.coords.longitude + '';
-      this.prov.updatePersonalData();
+      //this.prov.updatePersonalData();
 
       console.log('new loc = ', this.prov.data.move2Lati + ', ' + this.prov.data.move2Long);
     });

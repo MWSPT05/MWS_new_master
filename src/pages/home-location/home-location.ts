@@ -140,6 +140,7 @@ export class HomeLocationPage {
         this.prov.data.homeLongitude = localStorage.getItem('fbase_homeLong');
         this.prov.data.homeName = item.description;
         this.prov.data.homeAddr = results[0].formatted_address;
+        this.prov.updatePersonalData();
 
         console.log('fb_lati = ', localStorage.getItem('fbase_homeLati'));
         console.log('fb_lang = ', localStorage.getItem('fbase_homeLong'));

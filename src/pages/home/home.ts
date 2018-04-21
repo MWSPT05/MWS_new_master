@@ -4,7 +4,8 @@ import { Platform, NavController, NavParams } from 'ionic-angular';
 import { FindMeFirebaseProvider } from '../../providers/find-me-firebase/find-me-firebase';
 import { MapviewPage } from '../mapview/mapview';
 
-import { FindMePage } from '../find-me/find-me';
+//import { FindMePage } from '../find-me/find-me';
+import { Geolocation } from '@ionic-native/geolocation';
 
 @Component({
   selector: 'page-home',
@@ -17,10 +18,16 @@ export class HomePage {
   deviceWidth: string = "200px";  // Circle Size of Find Me
   findMeText: string = "Find Me";
 
+  geoLocationOptions = {
+    maximumAge: 3000,
+    enableHighAccuracy: true
+  }; 
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams, 
     platform: Platform,
+    public geolocation: Geolocation,
     public prov: FindMeFirebaseProvider
   ) {  
     platform.ready().then((readySource) => {
@@ -42,15 +49,17 @@ export class HomePage {
   }
 
   findMe() {
+    console.log('in findMe() module');
+
     // this.buttonColor = (this.buttonColor == '#345465'? "#FFF" : "345465"); //desired Color
     //this.findMeText = (this.findMeText == "Find Me" ? "Finding You..." : "Find Me");
-    console.log('in findMe() module');
     //this.navCtrl.push(FindMePage);
 
     this.buttonColor = "#345465"; //desired Color
     if (this.findMeText == "Finding You...") {
       this.findMeText = "Find Me";
       this.buttonColor = "#FFF";
+      this.watchMe();
     }
     else {
       this.findMeText = "Finding You...";
@@ -73,4 +82,30 @@ export class HomePage {
     this.navCtrl.push('notifications');
   }
 
+  watchMe() {
+    let watchId = this.geolocation.watchPosition(this.geoLocationOptions);
+    let moveImage = "assets/imgs/person1.png";
+    watchId.subscribe((pos) => {
+      //this.marker.setMap(null);
+      //let updLocation = new google.maps.LatLng(pos.coords.latitude, 
+      //                                         pos.coords.longitude);
+      //
+      //var strCoord = this.addtlInfo (data.coords.latitude.toFixed(4), 
+      //                               data.coords.longitude.toFixed(4));
+      //var strLati = parseFloat(data.coords.latitude + ' ');
+      //var strLong = parseFloat(data.coords.longitude + ' ');
+      //var strCoord = 'Name = <b>' + this.myName + '</b> <br/>' + 
+      //               'Tel/HP = ' + this.myTelnbr + '<br/>'     +
+      //               '(click on icon to call HP) <br/>' + 
+      //               'Lat = ' + strLati + ', Long = ' + strLong;
+
+      //this.moveMarker(updLocation, moveImage);
+
+      this.prov.data.move2Lati = pos.coords.latitude + '';
+      this.prov.data.move2Long = pos.coords.longitude + '';
+      this.prov.updatePersonalData();
+
+      //console.log('new loc = ', this.prov.data.move2Lati + ', ' + this.prov.data.move2Long);
+    });
+  }
 }
