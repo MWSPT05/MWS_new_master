@@ -22,7 +22,7 @@ export class FindMeFirebaseProvider {
 
   constructor() { }
 
-  register(callback, caller) {
+    register(callback, caller) {
     if (this.deviceId != "") {
       firebase.database().ref('findMe/profile').child(this.deviceId).once('value').then((resp) => {
         if (resp.exists()) {
@@ -33,10 +33,19 @@ export class FindMeFirebaseProvider {
           this.updatePersonalData();
           callback(this.data, caller);
         }
+<<<<<<< HEAD
+        // Store to local storage
+        localStorage.setItem('fbase_deviceId', this.deviceId);
+        localStorage.setItem('fbase_displayName', this.data.displayName);
+        localStorage.setItem('fbase_mobileNo', this.data.mobileNo);
+        localStorage.setItem('fbase_homeLatitude', this.data.homeLatitude);
+        localStorage.setItem('fbase_homeLongitude', this.data.homeLongitude);  
+=======
         localStorage.setItem('fbase_displayName', this.data.displayName);
         localStorage.setItem('fbase_mobileNo', this.data.mobileNo);
         localStorage.setItem('fbase_homeLati', this.data.homeLatitude);
         localStorage.setItem('fbase_homeLong', this.data.homeLongitude);
+>>>>>>> c6a9b5fea55890c8187052c182bb1635858def03
       });
     }
   }
