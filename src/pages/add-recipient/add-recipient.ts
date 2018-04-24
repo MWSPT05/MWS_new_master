@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FindMeFirebaseProvider } from '../../providers/find-me-firebase/find-me-firebase';
-import { Profile } from '../../model/profile';
+import { Recipient } from '../../model/recipient';
 
 @IonicPage({
   name: 'add-recipient'
@@ -11,20 +11,14 @@ import { Profile } from '../../model/profile';
   templateUrl: 'add-recipient.html',
 })
 export class AddRecipientPage {
+  public recipient: Recipient = 
+  { 
+  displayName: "", 
+  mobileNo: "",
+  devToken: ""
+  };
 
   //recipient: Profile = {displayName: '', mobileNo: '', homeLatitude: '', homeLongitude: ''}
-
-  recipient: Profile = 
-  { 
-    displayName: "", 
-    mobileNo: "", 
-    homeLatitude: "", 
-    homeLongitude: "",
-    homeName: "",
-    homeAddr: "",
-    move2Lati: "",
-    move2Long: ""
-  };
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public prov: FindMeFirebaseProvider) {
   }
@@ -33,9 +27,9 @@ export class AddRecipientPage {
     console.log('ionViewDidLoad AddRecipientPage');
   }
 
-  addRecipient()
+  addRecipient(recipient: Recipient)
   {
-    this.prov.addRecipient(this.recipient);
+    this.prov.addRecipient(recipient);
     this.navCtrl.pop();
   }
 

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { Platform, NavController, NavParams } from 'ionic-angular';
-
+import { AngularFireDatabase } from 'angularfire2/database';
 import { FindMeFirebaseProvider } from '../../providers/find-me-firebase/find-me-firebase';
 import { MapviewPage } from '../mapview/mapview';
 
 //import { FindMePage } from '../find-me/find-me';
 import { Geolocation } from '@ionic-native/geolocation';
+declare var FCMPlugin;
 
 @Component({
   selector: 'page-home',
@@ -18,6 +19,8 @@ export class HomePage {
   deviceWidth: string = "200px";  // Circle Size of Find Me
   findMeText: string = "Find Me";
 
+  private notifdb = this.db.list('notification');
+ 
   geoLocationOptions = {
     maximumAge: 3000,
     enableHighAccuracy: true
@@ -28,13 +31,19 @@ export class HomePage {
     public navParams: NavParams, 
     platform: Platform,
     public geolocation: Geolocation,
-    public prov: FindMeFirebaseProvider
+    public prov: FindMeFirebaseProvider,
+    private db: AngularFireDatabase,
+
   ) {  
     platform.ready().then((readySource) => {
       this.calculateDeviceWidth(platform.width(), platform.height());
     });
   }
 
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad FindMePage');
+   // this.userid = this.navParams.get('data');
+  }
   onResize(event) {
     this.calculateDeviceWidth(event.target.innerWidth, event.target.innerHeight);
   }
@@ -59,9 +68,19 @@ export class HomePage {
     if (this.findMeText == "Finding You...") {
       this.findMeText = "Find Me";
       this.buttonColor = "#FFF";
-      this.watchMe();
+    //  this.watchMe();
     }
     else {
+      this.notifdb.push({displayName : this.prov.profile.displayName, date: new Date().toISOString()});
+      FCMPlugin.onNotification(function(data){
+        if(data.wasTapped){
+          //Notification was received on device tray and tapped by the user.
+          alert( JSON.stringify(data) );
+        }else{
+          //Notification was received in foreground. Maybe the user needs to be notified.
+          alert( JSON.stringify(data) );       
+        }
+      });
       this.findMeText = "Finding You...";
       this.buttonColor = "#345465"
     }
@@ -82,7 +101,7 @@ export class HomePage {
     this.navCtrl.push('notifications');
   }
 
-  watchMe() {
+ /* watchMe() {
     let watchId = this.geolocation.watchPosition(this.geoLocationOptions);
     let moveImage = "assets/imgs/person1.png";
     watchId.subscribe((pos) => {
@@ -107,5 +126,5 @@ export class HomePage {
 
       //console.log('new loc = ', this.prov.data.move2Lati + ', ' + this.prov.data.move2Long);
     });
-  }
+  } */
 }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, AlertController, LoadingController, NavController, Platform, NavParams } from 'ionic-angular';
 import { FindMeFirebaseProvider } from '../../providers/find-me-firebase/find-me-firebase';
 import { Profile } from '../../model/profile';
+import { Recipient } from '../../model/recipient';
 
 @IonicPage({
   name: 'setting'
@@ -111,7 +112,7 @@ export class SettingPage {
     this.navCtrl.push('add-recipient');
   }
 
-  removeRecipient(item: Profile)
+  removeRecipient(item: Recipient)
   {
       this.prov.deleteNotifyOther(item);
       this.showNotifyOther();

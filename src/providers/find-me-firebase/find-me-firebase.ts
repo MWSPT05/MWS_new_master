@@ -1,30 +1,40 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'Firebase';
 import { Profile } from '../../model/profile';
+import { Recipient } from '../../model/recipient';
+import { AngularFireDatabase } from 'angularfire2/database';
+import { AlertController } from 'ionic-angular';
 
 @Injectable()
 export class FindMeFirebaseProvider {
-  public deviceId = "";
+//  public deviceId = "";
+  private profileList = this.db.list('profile');
   public notifyOther = [];
   public notifyMe = [];
-
-  public data: Profile = 
+  public profile: Profile = 
   { 
-    displayName: "", 
-    mobileNo: "", 
-    homeLatitude: "", 
-    homeLongitude: "",
-    homeName: "",
-    homeAddr: "",
-    move2Lati: "",
-    move2Long: ""
-  };
+  displayName: '',
+  mobileNo: '',
+  devToken: '',
+  deviceID: '',
+  homeLatitude: '',
+  homeLongitude: '',
+  homeName: '',
+  homeAddr: '',
+  move2Lati: '',
+  move2Long: ''
+  }; 
 
-  constructor() { }
+  constructor(private db: AngularFireDatabase, public alertCtrl: AlertController){}
 
-    register(callback, caller) {
+    addProfile(){
+      this.profileList.push(this.profile);
+    }  
+    
+    
+ /*   register(callback, caller) {
     if (this.deviceId != "") {
-      firebase.database().ref('findMe/profile').child(this.deviceId).once('value').then((resp) => {
+      firebase.database().ref('profile').child(this.deviceId).once('value').then((resp) => {
         if (resp.exists()) {
           this.data = resp.val();
           callback(resp.val(), caller);
@@ -41,20 +51,27 @@ export class FindMeFirebaseProvider {
         localStorage.setItem('fbase_homeLongitude', this.data.homeLongitude);  
       });
     }
+  } */
+
+  updatePersonalData(){
+    firebase.database().ref('profile').orderByChild('displayName').equalTo(this.profile.displayName)
+      .once("value", snapshot => {
+          snapshot.forEach(itemSnap => {
+          firebase.database().ref('profile/' + itemSnap.key).set(this.profile);
+          return false;
+        });
+    });
+//    firebase.database().ref('profile').child(this.deviceId).set(this.data);
   }
 
-  updatePersonalData() {
-    firebase.database().ref('findMe/profile').child(this.deviceId).set(this.data);
-  }
-
-  updateMobileNo(prevMobileNo: string) {
+ /* updateMobileNo(prevMobileNo: string) {
     if (this.data.mobileNo != prevMobileNo) {
-      firebase.database().ref('findMe/mobile/' + this.data.mobileNo + '/' + this.deviceId).set('Registered');
-      firebase.database().ref('findMe/mobile/' + prevMobileNo + '/' + this.deviceId).set(null);
+      firebase.database().ref('mobile/' + this.data.mobileNo + '/' + this.deviceId).set('Registered');
+      firebase.database().ref('mobile/' + prevMobileNo + '/' + this.deviceId).set(null);
     }
-  }
+  }*/
 
-  private findDeleteFirebase(path: string, findBy: string, findValue: string)
+ private findDeleteFirebase(path: string, findBy: string, findValue: string)
   {
     firebase.database().ref(path).orderByChild(findBy).equalTo(findValue).once("value", snapshot => {
       snapshot.forEach(itemSnap => {
@@ -65,18 +82,16 @@ export class FindMeFirebaseProvider {
     });
   }
 
-  deleteNotifyOther(recipient: Profile) {
-    if (this.data.mobileNo === '' || recipient.mobileNo === '') return;
+  deleteNotifyOther(recipient: Recipient) {
+   // if (this.data.mobileNo === '' || recipient.mobileNo === '') return;
     // Remove notify-other link
-    this.findDeleteFirebase('findMe/notify-other/mobile/' + this.data.mobileNo + '/' + this.deviceId
-      , 'mobileNo', recipient.mobileNo);
-    // Remove notify-me link from recipient
-    this.findDeleteFirebase('findMe/notify-me/mobile/' + recipient.mobileNo
-      , 'mobileNo', this.data.mobileNo);
+    this.findDeleteFirebase('notify-other/' + this.profile.displayName, 'displayName', recipient.displayName);
+        // Remove notify-me link from recipient
+    this.findDeleteFirebase('notify-me/' + recipient.displayName, 'displayName', this.profile.displayName);
   }
 
   loadNotifyOther(callback, caller) {
-    firebase.database().ref('findMe/notify-other/mobile/' + this.data.mobileNo + '/' + this.deviceId)
+    firebase.database().ref('notify-other/' + this.profile.displayName)
       .on('value', resp => {
         this.notifyOther = [];
 
@@ -91,7 +106,7 @@ export class FindMeFirebaseProvider {
   }
 
   loadNotifyMe(callback, caller) {
-    firebase.database().ref('findMe/notify-me/mobile/' + this.data.mobileNo)
+    firebase.database().ref('notify-me/' + this.profile.displayName)
       .on('value', resp => {
         this.notifyMe = [];
 
@@ -105,23 +120,38 @@ export class FindMeFirebaseProvider {
       )
   }
 
-  private findAddRecipient(path: string, findBy: string, person: Profile)
-  {
-    firebase.database().ref(path)
-      .orderByChild(findBy).equalTo(person.mobileNo).once("value", snapshot => {
-        const profile = snapshot.val();
-        if (!profile) firebase.database().ref(path).push(person);
-      }
-    );
-  }
-
-  addRecipient(recipient: Profile) {
-    this.findAddRecipient('findMe/notify-other/mobile/' + this.data.mobileNo + '/' + this.deviceId, 'mobileNo', recipient);
-    this.findAddRecipient('findMe/notify-me/mobile/' + recipient.mobileNo, 'mobileNo', this.data);
+  addRecipient(recipient: Recipient) {
+    var userName = this.profile.displayName
+    var userMobile = this.profile.mobileNo
+    firebase.database().ref('/profile/').orderByChild('displayName').equalTo(recipient.displayName)
+     .on('value', function(snapshot)  {
+         var childData;
+         snapshot.forEach(function(child) {
+           childData = child.val();
+           return false;
+         });
+   
+         if ((childData == null) || (childData.mobileNo != recipient.mobileNo)){
+           console.log("recipient not found");
+           let alert = this.alertCtrl.create({
+            title: 'Error',
+            subTitle: 'Recipient not found',
+            buttons: ['Dismiss']
+          });
+          alert.present();
+         } else {
+           recipient.devToken = childData.devToken;
+           console.log("recipient found");
+           firebase.database().ref('notify-other/' + userName + '/').push(recipient);
+          firebase.database().ref('notify-me/' + recipient.displayName + '/').push({displayName: userName, 
+          mobileNo: userMobile});
+         }
+     });
+     
   }
 }
 
-export const snapshotToArray = snapshot => {
+/*export const snapshotToArray = snapshot => {
   let returnArr = [];
 
   snapshot.forEach(item => {
@@ -136,4 +166,4 @@ export const snapshotToArray = snapshot => {
 
   return returnArr;
 
-};
+};*/

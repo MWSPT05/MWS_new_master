@@ -1,12 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 //import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 import { IonicPage, NavController, Platform, Navbar } from 'ionic-angular';
-import { AngularFireDatabase } from 'angularfire2/database';
-
 import { Geolocation } from '@ionic-native/geolocation';
-//import { Device } from '@ionic-native/device';
-import * as firebase from 'firebase';
-
 import { FindMeFirebaseProvider } from '../../providers/find-me-firebase/find-me-firebase';
 
 import { CallNumber } from '@ionic-native/call-number';
@@ -192,8 +187,7 @@ export class MapviewPage {
   
     infoWindow.open(this.map, marker);
 
-    let myName = this.global.data.displayName;
-    let myTelnbr = this.global.data.mobileNo;
+   let myTelnbr = this.global.profile.mobileNo;
   
     if (allowCall = 'Y') {
       google.maps.event.addListener(marker, 'click', () => {
@@ -206,8 +200,8 @@ export class MapviewPage {
   }
  
   addtlInfo(infoLati, infoLong) {
-    let myName = this.global.data.displayName;
-    let myTelnbr = this.global.data.mobileNo;
+    let myName = this.global.profile.displayName;
+    let myTelnbr = this.global.profile.mobileNo;
     var strLati = parseFloat(infoLati + ' ');
     var strLong = parseFloat(infoLong + ' ');
     return 'Name = <b>' + myName + '</b> <br/>' + 

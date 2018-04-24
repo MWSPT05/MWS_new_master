@@ -60,7 +60,7 @@ export class MapLocatorPage {
   } // showmap()
 
   calculateAndDisplayRoute(start) {
-    let end: string =  this.prov.data.homeLatitude + ", " + this.prov.data.homeLongitude;
+    let end: string =  this.prov.profile.homeLatitude + ", " + this.prov.profile.homeLongitude;
     console.log(end);
 
     this.directionsService.route({

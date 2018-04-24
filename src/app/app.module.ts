@@ -39,7 +39,6 @@ import { HomeLocationPage } from '../pages/home-location/home-location';
     HomePage,
     SigninPage,
     MapviewPage,
-    //FindMePage,
     HomeLocationPage
   ],
   imports: [
@@ -56,7 +55,6 @@ import { HomeLocationPage } from '../pages/home-location/home-location';
     HomePage,
     SigninPage,
     MapviewPage,
-    //FindMePage,
     HomeLocationPage
   ],
   providers: [

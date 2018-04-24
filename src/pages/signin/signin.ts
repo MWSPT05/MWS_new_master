@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { IonicPage, LoadingController, NavController, NavParams, Platform } from 'ionic-angular';
-import { HomePage } from '../home/home';
+import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 import { FindMeFirebaseProvider } from '../../providers/find-me-firebase/find-me-firebase';
 import { UniqueDeviceID  } from '@ionic-native/unique-device-id';
-import { Geolocation } from '@ionic-native/geolocation';
+//import { Geolocation } from '@ionic-native/geolocation';
 
 import { HomeLocationPage } from '../home-location/home-location';
+
+declare var FCMPlugin;
 
 @IonicPage({
   name: 'sign-in'
@@ -17,14 +18,15 @@ import { HomeLocationPage } from '../home-location/home-location';
 })
 
 export class SigninPage {
-
-  loader = null;
-  profileLoaded = false;
-  deviceId: string = "TESTDEVICEID";
-  prevData = { displayName: "", mobileNo: "", condition: "" };
   
-  locationName: string;
-  locationAddr: string;
+  loader = null;
+//  profileLoaded = false;
+//  deviceId: string = "";
+//  prevData = { displayName: "", mobileNo: "", condition: "" };
+
+
+ // locationName: string;
+ // locationAddr: string;
 
   constructor(
     public navCtrl: NavController, 
@@ -32,8 +34,8 @@ export class SigninPage {
     public prov: FindMeFirebaseProvider, 
     private uniqueDeviceID: UniqueDeviceID,
     public platform: Platform,
-    private geolocation: Geolocation,
-    public loadingCtrl: LoadingController
+ //   private geolocation: Geolocation,
+ //   public loadingCtrl: LoadingController
   ) {
     //this.profileRef.set(null);
   }
@@ -43,41 +45,46 @@ export class SigninPage {
       this.uniqueDeviceID.get()
       .then((uuid: any) => {
         console.log("Can get uid: " + uuid)
-        this.deviceId = uuid;
-        this.prov.deviceId = this.deviceId;
-        this.prov.register(this.registerSuccess, this);
-        this.profileLoaded = true;
-      })
-      .catch((error: any) => 
+        this.prov.profile.deviceID = uuid;
+  //      this.prov.deviceId = this.deviceId;
+  //      this.prov.register(this.registerSuccess, this);
+  //      this.profileLoaded = true;
+      }).catch((error: any) => 
       {
         console.log("Cannot get uid: " + error)
-        this.prov.deviceId = this.deviceId;
-        this.prov.register(this.registerSuccess, this);
-        this.profileLoaded = true;
+  //      this.prov.deviceId = this.deviceId;
+  //      this.prov.register(this.registerSuccess, this);
+  //      this.profileLoaded = true;
       });
     });
   }
 
-  registerSuccess(loadedData, self)
+ /* registerSuccess(loadedData, self)
   {
     self.prevData = loadedData;
-  }
+  }*/
 
   signIn() {
     //console.log(this.prevData);
-    this.prov.updatePersonalData();
-    this.prov.updateMobileNo(this.prevData.mobileNo);
-
-    if(this.prov.data.homeLatitude == '' || this.prov.data.homeLongitude == '') {
-      this.navCtrl.push(HomeLocationPage);
+//    this.prov.updatePersonalData();
+//    this.prov.updateMobileNo(this.prevData.mobileNo);
+      this.tokensetup().then((token) => {
+        this.prov.profile.devToken = <string> token;
+//    user.deviceid = this.device.uuid;
+        this.prov.addProfile();
+        this.navCtrl.push(HomeLocationPage);
+  //  if(this.prov.data.homeLatitude == '' || this.prov.data.homeLongitude == '') {
+  //    this.navCtrl.push(HomeLocationPage);
       //this.navCtrl.push(HomePage);
       //this.navCtrl.setRoot(HomePage);
-    }
-    else {
+ //   }
+ //   else {
       //this.navCtrl.push(HomePage);
-      this.navCtrl.setRoot(HomePage);
-    }
-  }
+ //     this.navCtrl.setRoot(HomePage);
+ //   }
+    })
+
+}
 
   //setCurrentLocation()
   //{
@@ -95,10 +102,22 @@ export class SigninPage {
   //  if (this.loader !== null) this.loader.dismiss();
   //}
 
-  setCurrentLocation() {
+ /* setCurrentLocation() {
     console.log('setCurrentLocation');
     this.navCtrl.push(HomeLocationPage);
     //this.locationName = localStorage.getItem('locName');
     //this.locationAddr = localStorage.getItem('locAddr');
+  }*/
+
+  tokensetup() {
+    var promise = new Promise((resolve, reject) => {
+      FCMPlugin.getToken(function(token){
+        resolve(token);
+      }, (err) => {
+        reject(err);
+      });
+    })
+    return promise;
   }
+
 }

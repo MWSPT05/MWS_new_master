@@ -3,9 +3,9 @@ import { IonicPage, NavController, NavParams, Platform, LoadingController } from
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Geolocation } from '@ionic-native/geolocation';
-
 import { FindMeFirebaseProvider } from '../../providers/find-me-firebase/find-me-firebase';
 import { HomePage } from '../home/home';
+
 
 /**
  * Generated class for the HomeLocationPage page.
@@ -59,7 +59,8 @@ export class HomeLocationPage {
   }
 
   ionViewWillLeave() {
-    if (this.prov.data.homeLatitude != '' && this.prov.data.homeLongitude != '') {
+    if (this.prov.profile.homeLatitude != '' && this.prov.profile.homeLongitude != '') {
+      console.log(this.prov.profile.homeLatitude);
       this.navCtrl.setRoot(HomePage);
     }
   }
@@ -136,10 +137,10 @@ export class HomeLocationPage {
         localStorage.setItem('fbase_homeLati', results[0].geometry.location.lat().toFixed(6));
         localStorage.setItem('fbase_homeLong', results[0].geometry.location.lng().toFixed(6));
 
-        this.prov.data.homeLatitude = localStorage.getItem('fbase_homeLati');
-        this.prov.data.homeLongitude = localStorage.getItem('fbase_homeLong');
-        this.prov.data.homeName = item.description;
-        this.prov.data.homeAddr = results[0].formatted_address;
+        this.prov.profile.homeLatitude = localStorage.getItem('fbase_homeLati');
+        this.prov.profile.homeLongitude = localStorage.getItem('fbase_homeLong');
+        this.prov.profile.homeName = item.description;
+        this.prov.profile.homeAddr = results[0].formatted_address;
         this.prov.updatePersonalData();
 
         console.log('fb_lati = ', localStorage.getItem('fbase_homeLati'));
