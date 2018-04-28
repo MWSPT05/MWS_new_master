@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform, LoadingController, AlertController, ActionSheetController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Geolocation } from '@ionic-native/geolocation';
@@ -32,6 +32,13 @@ export class HomeLocationPage {
   geocoder: any
   autocompleteItems: any;
   loading: any; 
+  latLng: any;
+  marker: any;
+
+  geoLocationOptions = {
+    maximumAge: 3000,
+    enableHighAccuracy: true
+  }
 
   constructor(
     public zone: NgZone,
@@ -41,6 +48,8 @@ export class HomeLocationPage {
     public geolocation: Geolocation,
     public loadingCtrl: LoadingController,
     public prov: FindMeFirebaseProvider, 
+    public alertCtrl: AlertController,
+    public actionSheetCtrl: ActionSheetController,    
     public navCtrl: NavController, 
     public navParams: NavParams
   ) {
@@ -59,30 +68,109 @@ export class HomeLocationPage {
   }
 
   ionViewWillLeave() {
-    if (this.prov.data.homeLatitude != '' && this.prov.data.homeLongitude != '') {
+    if (this.prov.profile.homeLatitude != '' && this.prov.profile.homeLongitude != '') {
       this.navCtrl.setRoot(HomePage);
     }
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad HomeLocationPage');
-    let geoLocationOptions = {
-      maximumAge: 3000,
-      enableHighAccuracy: true
-    }
+    //console.log('ionViewDidLoad HomeLocationPage');
     
-    this.geolocation.getCurrentPosition(geoLocationOptions).then((position) => {
-      let latLng = new google.maps.LatLng(position.coords.latitude.toFixed(4), 
-                                          position.coords.longitude.toFixed(4));
+    this.geolocation.getCurrentPosition(this.geoLocationOptions).then((pos) => {
+      this.latLng = new google.maps.LatLng(pos.coords.latitude.toFixed(6), 
+                                           pos.coords.longitude.toFixed(6));
                                                 
       let mapOptions = {
-        center: latLng,
-        zoom: 18,
+        center: this.latLng,
+        zoom: 15,
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
-
       this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+
+      this.geocoder.geocode({'location': this.latLng}, (results, status) => {
+        let markerMsg = 'Current location:<br/>' +
+                         results[0].formatted_address
+        this.placeMarker(this.latLng, markerMsg)
+
+        //Action Sheet Control
+        let actionSheet = this.actionSheetCtrl.create({
+          title: 'Please select how you want to enter your address:',
+          buttons: [
+            {
+              text: 'Use current location',
+              handler: () => {
+                console.log('Use current location');
+
+                // prompt for a name for the address
+                let prompt = this.alertCtrl.create({
+                //title: 'Login',
+                  message: 'Please assign a name for current address : <br/><br/>' +
+                          '<b>' + results[0].formatted_address + '</b>',
+                  inputs: [
+                    {
+                      name: 'title',
+                      placeholder: 'Assign a name for current address'
+                    },
+                  ],
+                  buttons: [
+                    {
+                      text: '[ Cancel ]',
+                      handler: data => {
+                        console.log('Cancel clicked');
+                      }
+                    },
+                    {
+                      text: '[ Save ]',
+                      handler: data => {
+                        //console.log('Saved clicked');
+                        let markerMsg = '<b>' + data.title + '</b><br/>' +
+                                        results[0].formatted_address + '<br/><br/>' +
+                                        '<i>Tap on marker to proceed</i>'
+                        this.marker.setMap(null);
+                        this.placeMarker(this.latLng, markerMsg);
+                        google.maps.event.addListener(this.marker, 'click', () => {
+                          this.updHomeDtls(data.title,results[0])
+                          //this.navCtrl.pop();
+                          this.navCtrl.setRoot(HomePage);
+                        });  
+                      }
+                    }
+                  ]
+                });
+                prompt.present();
+              }
+            },{
+              text: 'Search for an address',
+              //icon: 'assets/imgs/googlemaps.png',
+              handler: () => {
+                console.log('Search Address');
+                this.marker.setMap(null);
+              }
+            },{
+              text: 'Go Back',
+              handler: () => {
+                this.navCtrl.pop();
+              }
+            }
+          ]
+        });
+        actionSheet.present();
+      });
+      
     });
+  }
+
+  // Put a marker
+  placeMarker(markerLatLng, markerMessage) {
+    this.marker = new google.maps.Marker({
+      position: markerLatLng,
+      //title: markerMessage,
+      map: this.map
+    });        
+    let infoWindow = new google.maps.InfoWindow({
+      content: markerMessage
+    });
+    infoWindow.open(this.map, this.marker);  
   }
 
   updateSearchResults(){
@@ -109,8 +197,8 @@ export class HomeLocationPage {
 
     this.geolocation.getCurrentPosition().then((resp) => {
       let pos = {
-        lat: resp.coords.latitude,
-        lng: resp.coords.longitude
+        lat: resp.coords.latitude.toFixed(6),
+        lng: resp.coords.longitude.toFixed(6)
       };
       let marker = new google.maps.Marker({
         position: pos,
@@ -131,43 +219,59 @@ export class HomeLocationPage {
     this.clearMarkers();
     this.autocompleteItems = [];
 
+    this.autocomplete.input = item.description;
+
     this.geocoder.geocode({'placeId': item.place_id}, (results, status) => {
       if(status === 'OK' && results[0]){
-        localStorage.setItem('fbase_homeLati', results[0].geometry.location.lat().toFixed(6));
-        localStorage.setItem('fbase_homeLong', results[0].geometry.location.lng().toFixed(6));
 
-        this.prov.data.homeLatitude = localStorage.getItem('fbase_homeLati');
-        this.prov.data.homeLongitude = localStorage.getItem('fbase_homeLong');
-        this.prov.data.homeName = item.description;
-        this.prov.data.homeAddr = results[0].formatted_address;
-        this.prov.updatePersonalData();
-
-        console.log('fb_lati = ', localStorage.getItem('fbase_homeLati'));
-        console.log('fb_lang = ', localStorage.getItem('fbase_homeLong'));
-
-        console.log('short name = ', results[0].address_components);
-
-        let marker = new google.maps.Marker({
+        this.marker = new google.maps.Marker({
           position: results[0].geometry.location,
-          title: results[0].formatted_address,
+          //title: results[0].formatted_address,
           map: this.map
         });
-
+        this.markers.push(this.marker);
+        
         let windowText = '<b>' + item.description + '</b><br/>' + 
-                         results[0].formatted_address      
-        let infowindow = new google.maps.InfoWindow({
-          content: windowText
-        });
-
-        this.markers.push(marker);
+                         results[0].formatted_address + '<br/><br/>' +
+                         '<i>Tap on marker to proceed</i>'
+        let infowindow = new google.maps.InfoWindow({ content: windowText });
+        infowindow.open(this.map, this.marker);
         this.map.setCenter(results[0].geometry.location);
 
-        infowindow.open(this.map, marker);
+        //localStorage.setItem('locName', item.description);
+        //localStorage.setItem('locAddr', results[0].formatted_address);
+        //localStorage.setItem('fbase_homeLati', results[0].geometry.location.lat());
+        //localStorage.setItem('fbase_homeLong', results[0].geometry.location.lng());
 
-        localStorage.setItem('locName', item.description);
-        localStorage.setItem('locAddr', results[0].formatted_address);
+        //console.log('fb_lati = ', localStorage.getItem('fbase_homeLati'));
+        //console.log('fb_lang = ', localStorage.getItem('fbase_homeLong'));
+        //console.log('short name = ', results[0].address_components);
+
+        google.maps.event.addListener(this.marker, 'click', () => {
+          this.updHomeDtls(item.description,results[0])
+          this.navCtrl.pop();
+        });  
+
       }
     });
+  }
+
+  updHomeDtls(homeDesc,srchRslts) {
+
+    this.prov.profile.homeLatitude = srchRslts.geometry.location.lat().toFixed(6);
+    this.prov.profile.homeLongitude = srchRslts.geometry.location.lng().toFixed(6);
+    this.prov.profile.homeName = homeDesc;
+    this.prov.profile.homeAddr = srchRslts.formatted_address;
+    this.prov.updatePersonalData();
+
+    //console.log('fb_lati = ', srchRslts.geometry.location.lat().toFixed(6));
+    //console.log('fb_lang = ', srchRslts.geometry.location.lng().toFixed(6));
+    //console.log('short name = ', srchRslts.address_components);
+
+    localStorage.setItem('locName', homeDesc);
+    localStorage.setItem('locAddr', srchRslts.formatted_address);
+    localStorage.setItem('fbase_homeLati', srchRslts.geometry.location.lat().toFixed(6));
+    localStorage.setItem('fbase_homeLong', srchRslts.geometry.location.lng().toFixed(6));
   }
 
   clearMarkers(){
@@ -179,5 +283,9 @@ export class HomeLocationPage {
       }
     }
     this.markers = [];
+  }
+
+  goBack(){
+    this.navCtrl.pop();
   }
 }

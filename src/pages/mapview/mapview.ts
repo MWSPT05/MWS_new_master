@@ -1,12 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 //import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 import { IonicPage, NavController, Platform, Navbar } from 'ionic-angular';
-import { AngularFireDatabase } from 'angularfire2/database';
-
 import { Geolocation } from '@ionic-native/geolocation';
-//import { Device } from '@ionic-native/device';
-import * as firebase from 'firebase';
-
 import { FindMeFirebaseProvider } from '../../providers/find-me-firebase/find-me-firebase';
 
 import { CallNumber } from '@ionic-native/call-number';
@@ -82,7 +77,7 @@ export class MapviewPage {
     
     this.geolocation.getCurrentPosition(this.geoLocationOptions).then(pos => {
       // debug
-      console.log('lat: ' + pos.coords.latitude + ', lon: ' + pos.coords.longitude);
+      //console.log('lat: ' + pos.coords.latitude + ', lon: ' + pos.coords.longitude);
              
       let location = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
       let curPosImage = "assets/imgs/person1.png";
@@ -127,7 +122,7 @@ export class MapviewPage {
         window.alert('Directions request failed due to ' + status);
       }
     });
-    console.log('end = ' + this.end);
+    //console.log('end = ' + this.end);
   } //calculateAndDisplayRoute()
 
   findMe(){
@@ -192,8 +187,7 @@ export class MapviewPage {
   
     infoWindow.open(this.map, marker);
 
-    let myName = this.global.data.displayName;
-    let myTelnbr = this.global.data.mobileNo;
+   let myTelnbr = this.global.profile.mobileNo;
   
     if (allowCall = 'Y') {
       google.maps.event.addListener(marker, 'click', () => {
@@ -206,8 +200,8 @@ export class MapviewPage {
   }
  
   addtlInfo(infoLati, infoLong) {
-    let myName = this.global.data.displayName;
-    let myTelnbr = this.global.data.mobileNo;
+    let myName = this.global.profile.displayName;
+    let myTelnbr = this.global.profile.mobileNo;
     var strLati = parseFloat(infoLati + ' ');
     var strLong = parseFloat(infoLong + ' ');
     return 'Name = <b>' + myName + '</b> <br/>' + 

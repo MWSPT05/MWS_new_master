@@ -1,31 +1,34 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>
+  <ion-navbar hideBackButton>
+    <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title text-center>
       Find Me!
     </ion-title>
-    <ion-buttons end>
+
+    <ion-buttons end>  
       <button ion-button block color="primary" (click)="setting()" large><ion-icon name="settings" large></ion-icon>
       </button>
-    </ion-buttons>
+    </ion-buttons>    
+
   </ion-navbar>
 </ion-header>
-
+  
 <ion-content text-center class="vertical-align-content">
   <div style="text-align: center; display: block; width:100%">
-    
       <button text-center class="btn" ion-button color="secondary" round outline (click)="findMe()"
       [ngStyle]="{'background-color': buttonColor, 'height': deviceWidth, 'width': deviceWidth}" large
       (window:resize)="onResize($event)">{{findMeText}}</button>
   </div>
+</ion-content>
     
-  </ion-content>
+<ion-footer>
+    <button ion-button color="secondary" full style="text-transform: none" large (click)='bringMeHome()'>
+        <ion-icon name="home" large></ion-icon>
+      &nbsp;&nbsp;&nbsp;Bring Me Home</button>
 
-  <ion-footer>
-      <button ion-button color="secondary" full style="text-transform: none" large (click)='bringMeHome()'>
-          <ion-icon name="home" large></ion-icon>
-        &nbsp;&nbsp;&nbsp;Bring Me Home</button>
-
-      <button ion-button color="#345465" full style="text-transform: none" large (click)='notifications()'>
-          <ion-icon name="alarm" large></ion-icon>
-        &nbsp;&nbsp;&nbsp;Notifications</button>
-  </ion-footer>
+    <button ion-button color="#345465" full style="text-transform: none" large (click)='notifications()'>
+        <ion-icon name="alarm" large></ion-icon>
+      &nbsp;&nbsp;&nbsp;Notifications</button>
+</ion-footer>

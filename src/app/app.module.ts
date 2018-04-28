@@ -32,6 +32,9 @@ import { CallNumber } from '@ionic-native/call-number';
 
 // Eric
 import { HomeLocationPage } from '../pages/home-location/home-location';
+//import { MenuPage } from '../pages/menu/menu';
+//import { SettingPage } from '../pages/setting/setting';
+//import { AddRecipientPage } from '../pages/add-recipient/add-recipient';
 
 @NgModule({
   declarations: [
@@ -39,8 +42,10 @@ import { HomeLocationPage } from '../pages/home-location/home-location';
     HomePage,
     SigninPage,
     MapviewPage,
-    //FindMePage,
-    HomeLocationPage
+    HomeLocationPage,
+    //MenuPage,
+    //SettingPage
+    //AddRecipientPage
   ],
   imports: [
     BrowserModule,
@@ -48,7 +53,7 @@ import { HomeLocationPage } from '../pages/home-location/home-location';
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
     AngularFireDatabaseModule,
     AngularFireStorageModule,
-    HttpClientModule    
+    HttpClientModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -56,8 +61,10 @@ import { HomeLocationPage } from '../pages/home-location/home-location';
     HomePage,
     SigninPage,
     MapviewPage,
-    //FindMePage,
-    HomeLocationPage
+    HomeLocationPage,
+    //MenuPage,
+    //SettingPage
+    //AddRecipientPage
   ],
   providers: [
     StatusBar,
@@ -68,7 +75,11 @@ import { HomeLocationPage } from '../pages/home-location/home-location';
     UniqueDeviceID,
     Device,
     //WatchMeRtnProvider,
-    CallNumber
+    CallNumber,
+    //HomePage,
+    //AddRecipientPage,
+    //HomeLocationPage
+    SigninPage
   ]
 })
-export class AppModule {}
+export class AppModule { }

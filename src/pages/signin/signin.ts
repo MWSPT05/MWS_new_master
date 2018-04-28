@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
-import { IonicPage, LoadingController, NavController, NavParams, Platform } from 'ionic-angular';
-import { HomePage } from '../home/home';
+import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
+import { AlertController } from 'ionic-angular';
 import { FindMeFirebaseProvider } from '../../providers/find-me-firebase/find-me-firebase';
 import { UniqueDeviceID  } from '@ionic-native/unique-device-id';
-import { Geolocation } from '@ionic-native/geolocation';
+//import { Geolocation } from '@ionic-native/geolocation';
 
 import { HomeLocationPage } from '../home-location/home-location';
+import { HomePage } from '../home/home';
+
+declare var FCMPlugin;
 
 @IonicPage({
   name: 'sign-in'
@@ -17,14 +20,9 @@ import { HomeLocationPage } from '../home-location/home-location';
 })
 
 export class SigninPage {
-
-  loader = null;
-  profileLoaded = false;
-  deviceId: string = "TESTDEVICEID";
-  prevData = { displayName: "", mobileNo: "", condition: "" };
   
-  locationName: string;
-  locationAddr: string;
+  loader = null;
+  //fbData: any;
 
   constructor(
     public navCtrl: NavController, 
@@ -32,73 +30,53 @@ export class SigninPage {
     public prov: FindMeFirebaseProvider, 
     private uniqueDeviceID: UniqueDeviceID,
     public platform: Platform,
-    private geolocation: Geolocation,
-    public loadingCtrl: LoadingController
-  ) {
-    //this.profileRef.set(null);
-  }
+    public alertCtrl: AlertController,
+  ) {   }
 
   ionViewDidLoad() {
     this.platform.ready().then(() => {
       this.uniqueDeviceID.get()
       .then((uuid: any) => {
-        console.log("Can get uid: " + uuid)
-        this.deviceId = uuid;
-        this.prov.deviceId = this.deviceId;
-        this.prov.register(this.registerSuccess, this);
-        this.profileLoaded = true;
-      })
-      .catch((error: any) => 
+        //console.log("Can get uid: " + uuid)
+        this.prov.profile.deviceID = uuid;
+      }).catch((error: any) => 
       {
-        console.log("Cannot get uid: " + error)
-        this.prov.deviceId = this.deviceId;
-        this.prov.register(this.registerSuccess, this);
-        this.profileLoaded = true;
+        //this.prov.profile.deviceID = '9125bd75-ff89-6a63-8640-480304327978';
+        //console.log("Cannot get uid: " + error + ' ' + this.prov.profile.deviceID)
       });
     });
   }
 
-  registerSuccess(loadedData, self)
-  {
-    self.prevData = loadedData;
+  signIn() {
+    //var fbData = this.prov.chkIfUserExist().then(() => {
+    var fbData = this.prov.chkIfUserExist(this.prov.profile.displayName, this.prov.profile.mobileNo).then(() => {
+      this.doSignin();
+    });
   }
 
-  signIn() {
-    //console.log(this.prevData);
-    this.prov.updatePersonalData();
-    this.prov.updateMobileNo(this.prevData.mobileNo);
-
-    if(this.prov.data.homeLatitude == '' || this.prov.data.homeLongitude == '') {
-      this.navCtrl.push(HomeLocationPage);
-      //this.navCtrl.push(HomePage);
-      //this.navCtrl.setRoot(HomePage);
+  doSignin() {
+    if (this.platform.is('android')) {
+      this.tokensetup().then((token) => { this.prov.profile.devToken = <string> token; });
     }
-    else {
-      //this.navCtrl.push(HomePage);
+
+    if (this.prov.userExist == 'N') {
+      this.prov.addProfile();
+      this.navCtrl.push(HomeLocationPage);
+    } else {
       this.navCtrl.setRoot(HomePage);
     }
   }
 
-  //setCurrentLocation()
-  //{
-  //  this.loader = this.loadingCtrl.create({
-  //    content: "Retrieving current location..."
-  //  });
-  //  //Show the loading indicator
-  //  this.loader.present();
-  //
-  //  this.geolocation.getCurrentPosition().then(pos => {
-  //    this.prov.data.homeLatitude = pos.coords.latitude.toFixed(6);
-  //    this.prov.data.homeLongitude = pos.coords.longitude.toFixed(6);
-  //  });
-  //
-  //  if (this.loader !== null) this.loader.dismiss();
-  //}
-
-  setCurrentLocation() {
-    console.log('setCurrentLocation');
-    this.navCtrl.push(HomeLocationPage);
-    //this.locationName = localStorage.getItem('locName');
-    //this.locationAddr = localStorage.getItem('locAddr');
+  tokensetup() {
+    var promise = new Promise((resolve, reject) => {
+      FCMPlugin.getToken(function(token){
+        resolve(token);
+      }, (err) => {
+        reject(err);
+      });
+    })
+    return promise;
   }
+
+
 }

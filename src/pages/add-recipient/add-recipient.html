@@ -1,14 +1,17 @@
 <ion-header>
-
-  <ion-navbar>
-    <ion-title>Add Recipient</ion-title>
+  <ion-navbar hideBackButton>
+    <ion-buttons left>
+      <button block color="primary" (click)="goBack()">
+        <ion-icon name="md-arrow-back" large></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title text-center>Add Recipient</ion-title>
   </ion-navbar>
-
 </ion-header>
 
 
 <ion-content padding>
-  <form (ngSubmit)="addRecipient()">
+  <form (ngSubmit)="addRecipient(recipient)">
     <ion-list>
       <ion-item>
         <ion-label floating>Recipient Display Name</ion-label>
@@ -19,7 +22,7 @@
         <ion-input type="text" [(ngModel)]="recipient.mobileNo" name="mobileNo" required=""></ion-input>
       </ion-item>
       <ion-item>
-        <button ion-button block clear type="submit">Add</button>
+        <button ion-button block clear type="submit"[disabled]="recipient.displayName === '' || recipient.mobileNo === ''">Add</button>
       </ion-item>
     </ion-list>
   </form>

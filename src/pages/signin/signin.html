@@ -1,18 +1,25 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar hideBackButton>
     <ion-title>Sign In</ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<!--
+<ion-content padding text-center class="align-self">
+  <img src="assets/imgs/FindMe!192.png">
+</ion-content>
+-->
+
+<ion-content padding class="cust-start-ion-content3">
   <!-- form (ngSubmit)="signIn()" -->
+  <img src="assets/imgs/FindMe!192.png" class="align-self">
   <form>
     <ion-list>
       <ion-row>
         <ion-col>
           <ion-item>
             <ion-label floating>Enter your Display Name</ion-label>
-            <ion-input type="text" [(ngModel)]="prov.data.displayName" name="displayname" required=""></ion-input>
+            <ion-input type="text" [(ngModel)]="prov.profile.displayName" name="displayname" required=""></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -20,7 +27,7 @@
         <ion-col>
           <ion-item>
             <ion-label floating>Enter your Mobile Number</ion-label>
-            <ion-input type="text" [(ngModel)]="prov.data.mobileNo" name="mobileno" required=""></ion-input>
+            <ion-input type="text" [(ngModel)]="prov.profile.mobileNo" name="mobileno" required=""></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -55,17 +62,15 @@
       <ion-row><ion-item> {{ prov.data.homeName }} </ion-item></ion-row>
       <ion-row><ion-item> {{ prov.data.homeAddr }} </ion-item></ion-row>
   -->
-      <ion-row>
-        <ion-col>
-          <ion-item>
-            <button ion-button full round color="secondary" type="submit" [disabled]="prov.data.displayName === '' || prov.data.mobileNo === '' || !profileLoaded"
-              (click)="signIn()" item-end>Enter
-            </button>
-          </ion-item>
-        </ion-col>
-      </ion-row>   
+  <ion-row>
+    <ion-col>
+      <ion-item class="item item-trns">
+        <button ion-button full round color="secondary" type="submit" [disabled]="prov.profile.displayName === '' || prov.profile.mobileNo === ''"
+          (click)="signIn()" item-end>Enter
+        </button>
+      </ion-item>
+    </ion-col>
+  </ion-row>   
     <!-- /ion-grid -->
-
-
   </form>
 </ion-content>

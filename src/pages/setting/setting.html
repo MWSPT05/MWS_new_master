@@ -1,6 +1,11 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>Setting</ion-title>
+  <ion-navbar hideBackButton>
+    <ion-buttons left>
+      <button block color="primary" (click)="goBack()">
+        <ion-icon name="md-arrow-back" large></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title text-center>Settings</ion-title>
   </ion-navbar>
 </ion-header>
 

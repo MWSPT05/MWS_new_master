@@ -44,7 +44,7 @@ export class MapLocatorPage {
     this.geolocation.getCurrentPosition().then(pos => {
       this.myLocation = pos;
       // debug
-      console.log('lat: ' + pos.coords.latitude + ', lon: ' + pos.coords.longitude);
+      //console.log('lat: ' + pos.coords.latitude + ', lon: ' + pos.coords.longitude);
       let location = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
       //const location = new google.maps.LatLng(51.507351, -0.127758);
       const options = {
@@ -60,8 +60,8 @@ export class MapLocatorPage {
   } // showmap()
 
   calculateAndDisplayRoute(start) {
-    let end: string =  this.prov.data.homeLatitude + ", " + this.prov.data.homeLongitude;
-    console.log(end);
+    let end: string =  this.prov.profile.homeLatitude + ", " + this.prov.profile.homeLongitude;
+    //console.log(end);
 
     this.directionsService.route({
       origin: start,
