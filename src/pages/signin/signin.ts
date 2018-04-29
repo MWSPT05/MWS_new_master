@@ -63,11 +63,16 @@ export class SigninPage {
       this.tokensetup().then((token) => { 
         this.currToken = <string> token;
         this.prov.profile.devToken = this.currToken;
-        console.log('here at doSigin, token is ', this.currToken);
+        console.log('here at doSignin, token is ', this.currToken);
       });
     }
 
     if (this.prov.userExist == 'N') {
+      this.prov.profile.homeAddr = '';
+      this.prov.profile.homeLatitude = '';
+      this.prov.profile.homeLongitude = '';
+      this.prov.profile.homeName = '';
+
       this.prov.addProfile();
       this.navCtrl.push(HomeLocationPage);
     } else {
@@ -75,10 +80,13 @@ export class SigninPage {
         if (this.currDevId != this.prov.profile.deviceID) {
           this.prov.profile.deviceID = this.currDevId;
           this.prov.profile.devToken = this.currToken;
+          //this.prov.profile.isActive = true;
           this.prov.updatePersonalData();
         }
         this.navCtrl.setRoot(HomePage);
     }
+    localStorage.setItem("myName", this.prov.profile.displayName);
+    localStorage.setItem("myTel", this.prov.profile.mobileNo);
   }
 
   tokensetup() {

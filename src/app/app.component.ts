@@ -52,6 +52,16 @@ export class MyApp {
     this.nav.setRoot(SigninPage);
   }
 
+  public appMyDtls() {
+    let alert = this.alertCtrl.create({
+      title: 'My Details',
+      subTitle: 'Name = ' + localStorage.getItem("myName") + '<br/>' +
+                'Mobile = ' + localStorage.getItem("myTel"),
+      buttons: ['Dismiss']
+    });
+    alert.present();
+  }
+
   public appAbout() {
     let alert = this.alertCtrl.create({
       title: 'About this App',

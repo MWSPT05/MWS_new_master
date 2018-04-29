@@ -50,6 +50,7 @@ export class HomePage {
     //console.log('ionViewDidLoad FindMePage');
    // this.userid = this.navParams.get('data');
   }
+
   onResize(event) {
     this.calculateDeviceWidth(event.target.innerWidth, event.target.innerHeight);
   }
