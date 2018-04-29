@@ -43,7 +43,7 @@ export class MapFinderPage {
     move2Lati: "",
     move2Long: "",
     isFinding: false,
-    isActive: false
+    //isActive: false
   };
 
   map: any;

@@ -32,7 +32,7 @@ export class FindMeFirebaseProvider {
   move2Lati: '',
   move2Long: '',
   isFinding: false,
-  isActive: false
+  //isActive: false
   }; 
 
   notifyMeNames = [];
