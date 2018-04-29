@@ -42,7 +42,8 @@ export class MapFinderPage {
     mobileNo: "",
     move2Lati: "",
     move2Long: "",
-    isFinding: false
+    isFinding: false,
+    isActive: false
   };
 
   map: any;

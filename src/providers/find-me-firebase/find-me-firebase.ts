@@ -11,7 +11,7 @@ import { SigninPage } from '../../pages/signin/signin';
 
 @Injectable()
 export class FindMeFirebaseProvider {
-//  public deviceId = "";
+  //public currDeviceId = "";
   private profileList = this.db.list('profile');
   public notifyOther = [];
   public notifyMe = [];
@@ -31,7 +31,8 @@ export class FindMeFirebaseProvider {
   mobileNo: '',
   move2Lati: '',
   move2Long: '',
-  isFinding: false
+  isFinding: false,
+  isActive: false
   }; 
 
   notifyMeNames = [];
@@ -116,7 +117,7 @@ export class FindMeFirebaseProvider {
 
         resp.forEach(itemSnap => {
           this.notifyOther.push(itemSnap.val());
-          return false;
+          return false; 
         });
 
         callback(this.notifyOther, caller);
@@ -187,6 +188,7 @@ export class FindMeFirebaseProvider {
         })
       })
     )
+    return this.userExist;
   }
 
   loadNotifications(arr) {

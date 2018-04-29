@@ -35,6 +35,9 @@ export class HomeLocationPage {
   latLng: any;
   marker: any;
 
+  data: any;
+  results: any = [];
+
   geoLocationOptions = {
     maximumAge: 3000,
     enableHighAccuracy: true
@@ -75,10 +78,25 @@ export class HomeLocationPage {
 
   ionViewDidLoad() {
     //console.log('ionViewDidLoad HomeLocationPage');
-    
+    let currAddr: any;
+    if (this.prov.profile.homeAddr == '') {
+      currAddr = ''
+    } else {
+      currAddr = 'Editing current address : ' + 
+                 this.prov.profile.homeName + ' ' +
+                 this.prov.profile.homeAddr 
+    }
+    console.log(this.prov.profile.homeName);
+    console.log(this.prov.profile.homeAddr);
+
     this.geolocation.getCurrentPosition(this.geoLocationOptions).then((pos) => {
-      this.latLng = new google.maps.LatLng(pos.coords.latitude.toFixed(6), 
-                                           pos.coords.longitude.toFixed(6));
+      if(this.prov.profile.homeLatitude == '' && this.prov.profile.homeLongitude == '') {
+        this.latLng = new google.maps.LatLng(pos.coords.latitude.toFixed(6), 
+                                             pos.coords.longitude.toFixed(6));
+      } else {
+        this.latLng = new google.maps.LatLng(this.prov.profile.homeLatitude, 
+                                             this.prov.profile.homeLongitude);        
+      }                                        
                                                 
       let mapOptions = {
         center: this.latLng,
@@ -88,13 +106,15 @@ export class HomeLocationPage {
       this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
 
       this.geocoder.geocode({'location': this.latLng}, (results, status) => {
-        let markerMsg = 'Current location:<br/>' +
+        let markerMsg = 'Current location/address:<br/>' +
                          results[0].formatted_address
         this.placeMarker(this.latLng, markerMsg)
 
         //Action Sheet Control
         let actionSheet = this.actionSheetCtrl.create({
           title: 'Please select how you want to enter your address:',
+          subTitle: currAddr,
+          enableBackdropDismiss: false,
           buttons: [
             {
               text: 'Use current location',
@@ -125,7 +145,7 @@ export class HomeLocationPage {
                         //console.log('Saved clicked');
                         let markerMsg = '<b>' + data.title + '</b><br/>' +
                                         results[0].formatted_address + '<br/><br/>' +
-                                        '<i>Tap on marker to proceed</i>'
+                                        '<i><b>Tap on marker to proceed</b></i>'
                         this.marker.setMap(null);
                         this.placeMarker(this.latLng, markerMsg);
                         google.maps.event.addListener(this.marker, 'click', () => {
@@ -146,11 +166,11 @@ export class HomeLocationPage {
                 console.log('Search Address');
                 this.marker.setMap(null);
               }
-            },{
-              text: 'Go Back',
-              handler: () => {
-                this.navCtrl.pop();
-              }
+            //},{
+            //  text: 'Go Back',
+            //  handler: () => {
+            //    this.navCtrl.pop();
+            //  }
             }
           ]
         });
@@ -233,7 +253,7 @@ export class HomeLocationPage {
         
         let windowText = '<b>' + item.description + '</b><br/>' + 
                          results[0].formatted_address + '<br/><br/>' +
-                         '<i>Tap on marker to proceed</i>'
+                         '<i><b>Tap on marker to proceed</b></i>'
         let infowindow = new google.maps.InfoWindow({ content: windowText });
         infowindow.open(this.map, this.marker);
         this.map.setCenter(results[0].geometry.location);
@@ -249,7 +269,8 @@ export class HomeLocationPage {
 
         google.maps.event.addListener(this.marker, 'click', () => {
           this.updHomeDtls(item.description,results[0])
-          this.navCtrl.pop();
+          //this.navCtrl.pop();
+          this.navCtrl.setRoot(HomePage);
         });  
 
       }
@@ -285,7 +306,9 @@ export class HomeLocationPage {
     this.markers = [];
   }
 
-  goBack(){
-    this.navCtrl.pop();
-  }
+  //goBack(){
+    //this.navCtrl.pop();
+    //this.updHomeDtls(this.data.title,this.results[0])
+    //this.navCtrl.setRoot(HomePage);
+  //}
 }

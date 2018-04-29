@@ -11,4 +11,5 @@ export interface Profile {
     move2Lati: string;
     move2Long: string;
     isFinding: boolean
+    isActive: boolean
 }
