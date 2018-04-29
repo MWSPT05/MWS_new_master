@@ -49,7 +49,7 @@ export class MyApp {
   }
 
   public appLogout() {
-    this.nav.push(SigninPage);
+    this.nav.setRoot(SigninPage);
   }
 
   public appAbout() {

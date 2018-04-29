@@ -23,6 +23,7 @@ export class SigninPage {
   
   loader = null;
   currDevId: any;
+  currToken: any;
   //fbData: any;
 
   constructor(
@@ -59,7 +60,11 @@ export class SigninPage {
 
   doSignin() {
     if (this.platform.is('android')) {
-        this.tokensetup().then((token) => { this.prov.profile.devToken = <string> token; });
+      this.tokensetup().then((token) => { 
+        this.currToken = <string> token;
+        this.prov.profile.devToken = this.currToken;
+        console.log('here at doSigin, token is ', this.currToken);
+      });
     }
 
     if (this.prov.userExist == 'N') {
@@ -69,6 +74,7 @@ export class SigninPage {
         console.log('device id = ', this.currDevId + ' ' + this.prov.profile.deviceID)
         if (this.currDevId != this.prov.profile.deviceID) {
           this.prov.profile.deviceID = this.currDevId;
+          this.prov.profile.devToken = this.currToken;
           this.prov.updatePersonalData();
         }
         this.navCtrl.setRoot(HomePage);
