@@ -142,13 +142,10 @@ export class FindMeFirebaseProvider {
 
   addRecipient(recipient: Recipient) {
     firebase.database().ref('/profile/').orderByChild('displayName').equalTo(recipient.displayName)
-     //.on('value', function(snapshot)  {
-     .on('value', (snapshot) =>  {       
+     .once('value', (snapshot) =>  {       
       var childData;
-      var childKey;
       snapshot.forEach((child) => {
         childData = child.val();
-        childKey = child.key;
         return false;
       });
       if ((childData == null) || (childData.mobileNo != recipient.mobileNo)){
